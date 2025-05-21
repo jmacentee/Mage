@@ -1,7 +1,20 @@
 # **Mage**: A Scorecard Web App for the Card Game Wizard
 A Blazor WASM scorekeeper for the card game Wizard.  Static website hostable.
 
+Currently hosted on github pages: https://jmacentee.github.io/Mage/
 
+Current Issues
+- Does not copy previous game or advance the dealer between games.
+- On Android you get a red validtion error for out of range nubmers, but nothing from stopping you entering them
+- Style is not complete
+- Style of scoresheet page his horrible
+- Navigation buttons should move to the bottom of window
+- Should be able to navigate back to in progress page from scoresheet page
+- do not need New Game on scoresheet page
+- most buttons can be icons
+
+Specification
+-
 .NET 9 Blazor WebAssembly (WASM) only project. It will be hosted as a static website. All data will be kept in local storage on the client only. The UI will be formatted for easy use on a phone, but should be responsive and useable on a tablet or PC. The name of the project will be Mage because it is a scorekeeping app for the card game Wizard.
 
 Mage will keep the history of all games played, but older games can be cleared out to save on local storage. Games can be interrupted and resumed over multiple days, and multiple active games can be in progress at the same time. Only one game can be open and contributed to at once.
