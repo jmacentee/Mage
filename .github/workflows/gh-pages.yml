@@ -1,5 +1,12 @@
 # This is ".github/workflows/gh-pages.yml" file.
-# This is an EXAMPLE of "GitHub Actions Workflow file". Try again.
+# This is an EXAMPLE of "GitHub Actions Workflow file". 
+# Followed https://github.com/jsakamoto/PublishSPAforGitHubPages.Build
+# Then: - Check GitHub Actions Permissions
+# - Navigate to Settings → Actions → General.
+# - Scroll down to Workflow Permissions.
+# - Ensure that "Read and write permissions" is selected (instead of "Read-only").
+# Then: Change GitHub Pages source to Branch gh-pages
+
 
 name: github pages
 
