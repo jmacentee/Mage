@@ -1,0 +1,61 @@
+@page "/gameover"
+@inject GameService GameService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@using Microsoft.JSInterop
+
+
+
+
+<h3>Game Over</h3>
+
+@if (GameService.CurrentGame is not null)
+{
+    var game = GameService.CurrentGame;
+    var maxScore = game.Players.Max(p => p.Score);
+    var winners = game.Players.Where(p => p.Score == maxScore).ToList();
+
+    <div class="confetti">🎉</div>
+
+    @if (winners.Count == 1)
+    {
+        <h2>Winner: @winners.First().Name (@winners.First().Score pts)</h2>
+    }
+    else
+    {
+        <h2>Tie!</h2>
+        <ul>
+        @foreach (var w in winners)
+        {
+            <li>@w.Name (@w.Score pts)</li>
+        }
+        </ul>
+    }
+
+    <h4>Final Scores:</h4>
+    <ul>
+    @foreach (var p in game.Players)
+    {
+        <li>@p.Name - @p.Score pts</li>
+    }
+    </ul>
+}
+<button @onclick="ToHome">Home</button>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("launchConfetti");
+        }
+    }
+
+
+    void ToHome()
+    {
+        GameService.EndCurrentGame();
+        Nav.NavigateTo("/");
+    }
+}

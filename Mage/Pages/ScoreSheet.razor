@@ -1,0 +1,46 @@
+@page "/scoresheet"
+@inject GameService GameService
+@inject NavigationManager Nav
+
+<h3>Score Sheet</h3>
+@if (GameService.CurrentGame is null)
+{
+    <p>No active game.</p>
+}
+else
+{
+    var game = GameService.CurrentGame;
+    <table class="horizontal">
+        <thead>
+            <tr>
+                <th>Round</th>
+                @foreach (var p in game.Players)
+                {
+                    <th>@p.Initials</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int r = 0; r < game.Rounds.Count; r++)
+            {
+                <tr>
+                    <td>@(r + 1)</td>
+                    @foreach (var p in game.Players)
+                    {
+                        var bid = game.Rounds[r].Bids.FirstOrDefault(b => b.PlayerInitials == p.Initials);
+                        <td>
+                            @bid?.BidValue | @(bid?.Success == true ? bid.BidValue + 2 : $"-{bid?.PointsLost ?? 0}") | @bid?.RoundPoints;
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (!game.IsComplete)
+    {
+        <button @onclick=@(() => Nav.NavigateTo("/newgame"))>New Game</button>
+    }
+       
+    <button @onclick=@(() => Nav.NavigateTo("/"))>Home</button>
+
+}

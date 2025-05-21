@@ -1,0 +1,181 @@
+@page "/inprogress"
+@inject GameService GameService
+@inject NavigationManager Nav
+@inject LocalStorageService Storage
+
+<h3>Game In Progress - Round @roundNumber</h3>
+
+@if (game is not null)
+{
+    <p><b>Dealer:</b> @dealerName</p>
+    <p><b>First Player:</b> @firstPlayerName</p>
+
+    @foreach (var player in game.Players)
+    {
+        <div class="bid-card">
+            <b>@player.Initials (@player.Score pts)</b><br />
+            <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Initials).BidValue" placeholder="Bid" />
+
+            <button class="@GetButtonClass(player.Initials, true)" @onclick="() => SetSuccess(player.Initials)">😊</button>
+            <button class="@GetButtonClass(player.Initials, false)" @onclick="() => SetFail(player.Initials)">☹️</button>
+
+            @if (failSelected.GetValueOrDefault(player.Initials))
+            {
+                <input type="number" min="1" max="@roundNumber" placeholder="Loss Points" @bind="GetBid(player.Initials).PointsLost" />
+            }
+        </div>
+    }
+
+    <div class="actions">
+        <button @onclick="Undo">Undo</button>
+        <button @onclick="ViewScoresheet">Scoresheet</button>
+        <button @onclick="ToHome">Home</button>
+        @if (!IsFinalRound)
+
+        {
+
+            <button @onclick="NextRound" disabled="@( !AllPlayersSubmitted )">Next Round</button>
+
+        }else{
+            <button @onclick="CompleteGame" disabled="@( !AllPlayersSubmitted)">Game Over</button>
+        }
+    </div>
+}
+
+@code {
+    Game? game;
+    Round? currentRound;
+    int roundNumber { get; set; } = 1;
+    string dealerName = "";
+    string firstPlayerName = "";
+
+    Dictionary<string, bool> successSelected = new();
+    Dictionary<string, bool> failSelected = new();
+
+    protected override void OnInitialized()
+    {
+        game = GameService.CurrentGame;
+
+        StartRound();
+
+    }
+
+    private void StartRound(){
+        currentRound = game?.Rounds.LastOrDefault();
+
+        if (game != null && currentRound != null)
+        {
+            roundNumber = currentRound.RoundNumber;
+            dealerName = game.Players[currentRound.DealerIndex].Name;
+            firstPlayerName = game.Players[currentRound.FirstPlayerIndex].Name;
+        }
+
+    }
+
+    Bid GetBid(string initials)
+    {
+        if (currentRound == null) return new Bid();
+        var bid = currentRound.Bids.FirstOrDefault(b => b.PlayerInitials == initials);
+        if (bid == null)
+        {
+            bid = new Bid { PlayerInitials = initials };
+            currentRound.Bids.Add(bid);
+        }
+        return bid;
+    }
+
+    void SetSuccess(string initials)
+    {
+        successSelected[initials] = true;
+        failSelected[initials] = false;
+        GetBid(initials).Success = true;
+    }
+
+    void SetFail(string initials)
+    {
+        failSelected[initials] = true;
+        successSelected[initials] = false;
+        GetBid(initials).Success = false;
+    }
+
+    string GetButtonClass(string initials, bool isSuccess)
+    {
+        bool selected = isSuccess ? successSelected.GetValueOrDefault(initials) : failSelected.GetValueOrDefault(initials);
+        if (isSuccess){
+            return selected ? "selectedSuccess" : "ToggleSuccess";
+        }else{
+            return selected ? "selectedFail" : "ToggleSuccess";
+        }
+    }
+
+    void Undo()
+    {
+        successSelected.Clear();
+        failSelected.Clear();
+        currentRound?.Bids.Clear();
+    }
+
+    void NextRound()
+    {
+        ApplyScores();
+        var nextRoundNum = roundNumber + 1;
+        var nextDealer = (currentRound!.DealerIndex + 1) % game!.Players.Count;
+        var nextFirst = (nextDealer + 1) % game.Players.Count;
+        game.Rounds.Add(new Round { RoundNumber = nextRoundNum, DealerIndex = nextDealer, FirstPlayerIndex = nextFirst });
+        GameService.SaveGame();
+        successSelected.Clear();
+        failSelected.Clear();
+
+        StartRound();
+        //Nav.NavigateTo("/inprogress", forceLoad: true);
+    }
+
+    void CompleteGame()
+    {
+        ApplyScores();
+        game!.IsComplete = true;
+        GameService.SaveGame();
+        Nav.NavigateTo("/gameover");
+    }
+
+    void ApplyScores()
+    {
+        foreach (var bid in currentRound!.Bids)
+        {
+            var player = game!.Players.First(p => p.Initials == bid.PlayerInitials);
+            if (bid.Success == true)
+                player.Score += bid.BidValue + 2;
+            else if (bid.PointsLost.HasValue)
+                player.Score -= bid.PointsLost.Value;
+
+
+
+            bid.RoundPoints = player.Score;
+        }
+    }
+
+    void ToHome(){
+        GameService.SaveGame();
+        Nav.NavigateTo("/");
+    }
+
+    void ViewScoresheet(){
+        GameService.SaveGame();
+        Nav.NavigateTo("/scoresheet");
+    }
+
+    bool AllPlayersSubmitted =>
+        game?.Players.All(p => successSelected.ContainsKey(p.Initials) || failSelected.ContainsKey(p.Initials)) ?? false;
+
+    bool IsFinalRound =>
+        game != null && game.Rounds.Count >= MaxRounds(game.Players.Count);
+
+    int MaxRounds(int count) => count switch
+    {
+        3 => 20,
+        4 => 15,
+        5 => 12,
+        6 => 10,
+        _ => 10
+    };
+}

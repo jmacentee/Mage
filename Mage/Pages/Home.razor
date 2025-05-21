@@ -1,0 +1,70 @@
+@page "/"
+@inject GameService GameService
+@inject NavigationManager Nav
+
+<h3>Game History</h3>
+<button @onclick="ClearHistory">Clear History</button>
+<button @onclick="NewGame">New Game</button>
+
+@if(GameService.Initialized){
+    @if (GameService.Games.Count == 0)
+    {
+        <p>No games yet.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var game in GameService.Games)
+            {
+                <li @onclick="() => NavigateToGame(game)" class="@GetListClass(game)">
+                    <b>@game.StartDate.ToShortDateString()</b>
+                    - Players: @string.Join(", ", game.Players.Select(p => p.Initials))
+                    - @(game.IsComplete ? "Complete" : $"In Progress (Round {game.Rounds.Count})")
+                </li>
+            }
+        </ul>
+    }
+}else{
+    <p>loading...</p>
+}
+
+@code {
+    string GetListClass(Game game){
+        if(game.IsComplete){
+            return "GameIsComplete";
+        }else{
+            return "GameNotComplete";
+        }
+    }
+
+    void ClearHistory()
+    {
+        GameService.Games.Clear();
+        StateHasChanged();
+    }
+
+    void NewGame() => Nav.NavigateTo("/newgame");
+
+    void NavigateToGame(Game game)
+    {
+        GameService.ResumeGame(game.Id);
+        Nav.NavigateTo(game.IsComplete ? $"/scoresheet" : "/inprogress");
+    }
+
+    protected override void OnInitialized()
+    {
+        GameService.OnInitializedChanged += HandleInitializedChanged;
+    }
+
+    private void HandleInitializedChanged()
+    {
+        StateHasChanged(); // Force UI update
+    }
+
+    public void Dispose()
+    {
+        GameService.OnInitializedChanged -= HandleInitializedChanged;
+    }
+
+
+}

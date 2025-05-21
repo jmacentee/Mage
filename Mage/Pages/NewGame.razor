@@ -1,0 +1,62 @@
+@page "/newgame"
+@inject GameService GameService
+@inject NavigationManager Nav
+
+<h3>New Game</h3>
+
+@for (int i = 0; i < 6; i++)
+{
+    var index = i;
+    <div>
+        <input type="radio"
+               name="dealer"
+               value="@index"
+               @onchange="EventCallback.Factory.Create<ChangeEventArgs>(this, e => selectedDealer = int.Parse(e.Value.ToString()))" />
+        <input placeholder="Name" @bind="players[index].Name" />
+        <input placeholder="Initials" maxlength="3" @bind="players[index].Initials" />
+    </div>
+}
+
+@* @foreach (Player player in players)
+{
+    <p><span>@player.Name</span><span>@player.Initials</span></p>
+}
+
+<p>@selectedDealer</p>
+
+@if (selectedDealer > -1){
+     <p>@players[selectedDealer].Name</p>
+}
+ *@
+<button @onclick="Cancel">Cancel</button>
+<button @onclick="StartGame" disabled="@( !CanStart )">Start Game</button>
+
+@code {
+    private List<Player> players = Enumerable.Range(0, 6).Select(_ => new Player()).ToList();
+    private int selectedDealer = -1;
+
+    bool CanStart =>
+        players.Count(p => !string.IsNullOrWhiteSpace(p.Name) && !string.IsNullOrWhiteSpace(p.Initials)) >= 3 &&
+        selectedDealer >= 0 &&
+        !string.IsNullOrWhiteSpace(players[selectedDealer].Name);
+
+    void Cancel() => Nav.NavigateTo("/");
+
+    void StartGame()
+    {
+        var validPlayers = players
+            .Where(p => !string.IsNullOrWhiteSpace(p.Name) && !string.IsNullOrWhiteSpace(p.Initials))
+            .ToList();
+
+        var game = new Game { Players = validPlayers };
+        game.Rounds.Add(new Round
+        {
+            RoundNumber = 1,
+            DealerIndex = selectedDealer,
+            FirstPlayerIndex = (selectedDealer + 1) % validPlayers.Count
+        });
+
+        GameService.StartNewGame(game);
+        Nav.NavigateTo("/inprogress");
+    }
+}
