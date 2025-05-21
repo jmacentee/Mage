@@ -127,7 +127,7 @@
         failSelected.Clear();
 
         StartRound();
-        //Nav.NavigateTo("/inprogress", forceLoad: true);
+        //Nav.NavigateTo("./inprogress", forceLoad: true);
     }
 
     void CompleteGame()
@@ -135,7 +135,7 @@
         ApplyScores();
         game!.IsComplete = true;
         GameService.SaveGame();
-        Nav.NavigateTo("/gameover");
+        Nav.NavigateTo("./gameover");
     }
 
     void ApplyScores()
@@ -156,12 +156,12 @@
 
     void ToHome(){
         GameService.SaveGame();
-        Nav.NavigateTo("/");
+        Nav.NavigateTo("./");
     }
 
     void ViewScoresheet(){
         GameService.SaveGame();
-        Nav.NavigateTo("/scoresheet");
+        Nav.NavigateTo("./scoresheet");
     }
 
     bool AllPlayersSubmitted =>

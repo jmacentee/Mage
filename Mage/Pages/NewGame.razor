@@ -40,7 +40,7 @@
         selectedDealer >= 0 &&
         !string.IsNullOrWhiteSpace(players[selectedDealer].Name);
 
-    void Cancel() => Nav.NavigateTo("/");
+    void Cancel() => Nav.NavigateTo("./");
 
     void StartGame()
     {
@@ -57,6 +57,6 @@
         });
 
         GameService.StartNewGame(game);
-        Nav.NavigateTo("/inprogress");
+        Nav.NavigateTo("./inprogress");
     }
 }

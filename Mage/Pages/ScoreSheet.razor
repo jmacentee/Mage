@@ -38,9 +38,9 @@ else
     </table>
     @if (!game.IsComplete)
     {
-        <button @onclick=@(() => Nav.NavigateTo("/newgame"))>New Game</button>
+        <button @onclick=@(() => Nav.NavigateTo("./newgame"))>New Game</button>
     }
        
-    <button @onclick=@(() => Nav.NavigateTo("/"))>Home</button>
+    <button @onclick=@(() => Nav.NavigateTo("./"))>Home</button>
 
 }
