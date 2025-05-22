@@ -4,14 +4,8 @@ A Blazor WASM scorekeeper for the card game Wizard.  Static website hostable.
 Currently hosted on github pages: https://jmacentee.github.io/Mage/
 
 Current Issues
-- Does not copy previous game or advance the dealer between games.
 - On Android you get a red validtion error for out of range nubmers, but nothing from stopping you entering them
 - Style is not complete
-- Style of scoresheet page his horrible
-- Navigation buttons should move to the bottom of window
-- Should be able to navigate back to in progress page from scoresheet page
-- do not need New Game on scoresheet page
-- most buttons can be icons
 
 Specification
 -
@@ -19,7 +13,7 @@ Specification
 
 Mage will keep the history of all games played, but older games can be cleared out to save on local storage. Games can be interrupted and resumed over multiple days, and multiple active games can be in progress at the same time. Only one game can be open and contributed to at once.
 
-The overall application should be polished and attractive like a professional mobile application. All user entry and game progress will be committed to local storage as soon as it is entered by the user without the need for any “save” buttons. Overall the biggest font will be used that allows the application to be easily seen on a phone screen. Vertical scrolling is allowed but should be avoided whenever possible. Horizontal Scrolling is not allowed. Use adaptive font sizes based on screen width.
+The overall application should be polished and attractive like a professional mobile application. All user entry and game progress will be committed to local storage as soon as it is entered by the user without the need for any ï¿½saveï¿½ buttons. Overall the biggest font will be used that allows the application to be easily seen on a phone screen. Vertical scrolling is allowed but should be avoided whenever possible. Horizontal Scrolling is not allowed. Use adaptive font sizes based on screen width.
 
 The application will be structured using components to avoid any duplication of code wherever possible.
 
@@ -29,13 +23,13 @@ If there are browser restrictions to how much local storage an application is al
 
 This is a simple grid of games played. The most recent games at the top.
 
-For each game, the grid will show the start date, the number of players, the player initials (comma separated list), a completed/in progress indicator icon, and the next round number (for in progress games only). The grid rows of the incomplete games should be tall and easy to press with a finger, the completed rows can be smaller to save on screen space. Pressing an incomplete game row navigates to the “**game in progress screen”** for the current round of that game. Pressing a complete game row navigates to the “**scoresheet** **view**” of that game.
+For each game, the grid will show the start date, the number of players, the player initials (comma separated list), a completed/in progress indicator icon, and the next round number (for in progress games only). The grid rows of the incomplete games should be tall and easy to press with a finger, the completed rows can be smaller to save on screen space. Pressing an incomplete game row navigates to the ï¿½**game in progress screenï¿½** for the current round of that game. Pressing a complete game row navigates to the ï¿½**scoresheet** **view**ï¿½ of that game.
 
-On this screen will be a button to “clear history” which will empty all local storage and reset the screen. Also, there will be a “new game” button which will open “**the new game screen**”.
+On this screen will be a button to ï¿½clear historyï¿½ which will empty all local storage and reset the screen. Also, there will be a ï¿½new gameï¿½ button which will open ï¿½**the new game screen**ï¿½.
 
 **2\. the new game screen:**
 
-On this screen, users will see a prompt “please enter your player names and initials in player order and select the first dealer” followed by a grid of 6 rows. Label the rows:
+On this screen, users will see a prompt ï¿½please enter your player names and initials in player order and select the first dealerï¿½ followed by a grid of 6 rows. Label the rows:
 
 - Player 1
 - Player 2
@@ -46,19 +40,19 @@ On this screen, users will see a prompt “please enter your player names and init
 
 Each row will have a radio button (to select the first dealer), a textbox for name, and a textbox for initials (1 character minimum, 3 characters maximum). A minimum of 3 rows must be filled out (name and initials) before the user is allowed to continue. One of the filled out rows must be selected as first dealer.
 
-Show a “Cancel” button which returns to the Home Screen.
+Show a ï¿½Cancelï¿½ button which returns to the Home Screen.
 
-Show a “Start Game” button that navigates to the “game in progress screen” when the player information is filled out correctly.
+Show a ï¿½Start Gameï¿½ button that navigates to the ï¿½game in progress screenï¿½ when the player information is filled out correctly.
 
-The first time a user comes to this screen, all information is blank. Each successive time the user navigates to “the new game screen”, the information is filled out with the details from their previous game, with the exception that the first dealer radio button has advanced to the next player automatically. For example, if there are only 3 player names filled out, and the previous game Player 3 was the first dealer, then Player 1 will be selected as first dealer. If there are 4 player names filled out, and the previous game Player 3 was the first dealer, then Player 4 will be selected as first dealer.
+The first time a user comes to this screen, all information is blank. Each successive time the user navigates to ï¿½the new game screenï¿½, the information is filled out with the details from their previous game, with the exception that the first dealer radio button has advanced to the next player automatically. For example, if there are only 3 player names filled out, and the previous game Player 3 was the first dealer, then Player 1 will be selected as first dealer. If there are 4 player names filled out, and the previous game Player 3 was the first dealer, then Player 4 will be selected as first dealer.
 
 **Player Order:**
 
-The players are entered in turn order or “from right to left”. Player 2 is “to the left” of Player 1. Player 3 is “to the left” of Player 2. Player 1 is "to the left” of the last player entered.
+The players are entered in turn order or ï¿½from right to leftï¿½. Player 2 is ï¿½to the leftï¿½ of Player 1. Player 3 is ï¿½to the leftï¿½ of Player 2. Player 1 is "to the leftï¿½ of the last player entered.
 
-In each round of a game, the dealer advances from the selected “first dealer” for round one, to the player “on their left” for round two, then continues to each player in succession.
+In each round of a game, the dealer advances from the selected ï¿½first dealerï¿½ for round one, to the player ï¿½on their leftï¿½ for round two, then continues to each player in succession.
 
-In each round of a game, the first player is always the player “on the left” of the dealer.
+In each round of a game, the first player is always the player ï¿½on the leftï¿½ of the dealer.
 
 If a game is resumed after an interruption, the system will ensure that the correct round number, dealer and first player are assigned.
 
@@ -68,64 +62,64 @@ This screen is the management and scoring of the current round of the game.
 
 This screen will include the following elements:
 
-Current game round number, the current dealer name, the current first player name, one “bid card” for each player, a “next round” button, an “undo” button, a “Home” button, “game over” button which is hidden, the scoresheet view button.
+Current game round number, the current dealer name, the current first player name, one ï¿½bid cardï¿½ for each player, a ï¿½next roundï¿½ button, an ï¿½undoï¿½ button, a ï¿½Homeï¿½ button, ï¿½game overï¿½ button which is hidden, the scoresheet view button.
 
-Each elements should be as big as possible on the screen to allow all players to see it from a distance without any scrolling. Please refer to the section above “Player Order” for more information on who should be displayed as the Dealer and the first player depending on round number.
+Each elements should be as big as possible on the screen to allow all players to see it from a distance without any scrolling. Please refer to the section above ï¿½Player Orderï¿½ for more information on who should be displayed as the Dealer and the first player depending on round number.
 
 Current game round number:
 
-This will start at 1 for a new game and automatically advance by 1 each time the user clicks the “new round” button. The maximum value depends on the number of players:
+This will start at 1 for a new game and automatically advance by 1 each time the user clicks the ï¿½new roundï¿½ button. The maximum value depends on the number of players:
 
 - 3 Players: 20
 - 4 Players: 15
 - 5 Players: 12
 - 6 Players: 10
 
-After the maximum value of round number is obtained, the “next round” button is hidden and the “game over” button is shown in it’s place.
+After the maximum value of round number is obtained, the ï¿½next roundï¿½ button is hidden and the ï¿½game overï¿½ button is shown in itï¿½s place.
 
 Bid Card:
 
 Bid cards are only shown for the players will their names filled out.
 
-The bid card shows the player’s initials, a textbox to enter their bid, and their current score, a button “success button” which is an icon of a happy face, a “fail” button that shows a sad face. The bid will be validated to be a number between zero and the current round number and will use the phone’s number keypad to enter it. The bid field will turn red if a user enters an invalid bid (outside the allowed range). Users can delete the contents of a bid field and change them to a different valid value until the “success” or “fail” buttons are clicked.
+The bid card shows the playerï¿½s initials, a textbox to enter their bid, and their current score, a button ï¿½success buttonï¿½ which is an icon of a happy face, a ï¿½failï¿½ button that shows a sad face. The bid will be validated to be a number between zero and the current round number and will use the phoneï¿½s number keypad to enter it. The bid field will turn red if a user enters an invalid bid (outside the allowed range). Users can delete the contents of a bid field and change them to a different valid value until the ï¿½successï¿½ or ï¿½failï¿½ buttons are clicked.
 
 Current score for each player is 0 for Round 1.
 
-If the “success” button is clicked, it will toggle as highlighted. The user will be counted as a “success” when the “next round” or “game over” buttons are clicked.
+If the ï¿½successï¿½ button is clicked, it will toggle as highlighted. The user will be counted as a ï¿½successï¿½ when the ï¿½next roundï¿½ or ï¿½game overï¿½ buttons are clicked.
 
-If the “fail” button is clicked, it will toggle as highlighted. A popup prompt will as “how many points do their loose”. Those loss points will be recorded when the “next round” or “game over” buttons are clicked. There is no default value of the lost points.
+If the ï¿½failï¿½ button is clicked, it will toggle as highlighted. A popup prompt will as ï¿½how many points do their looseï¿½. Those loss points will be recorded when the ï¿½next roundï¿½ or ï¿½game overï¿½ buttons are clicked. There is no default value of the lost points.
 
-For each bid card, only one of the “fail” or “success” buttons can be clicked at a time. If the user makes a mistake and accidentally clicks the “success” they can correct this mistake by clicking the “fail” button, which will return the “success" button to an un-highlighted state. Similarly, if the user makes a mistake and accidentally clicks the “fail” they can correct this mistake by clicking the “success” button, which will return the “fail" button to an un-highlighted state.
+For each bid card, only one of the ï¿½failï¿½ or ï¿½successï¿½ buttons can be clicked at a time. If the user makes a mistake and accidentally clicks the ï¿½successï¿½ they can correct this mistake by clicking the ï¿½failï¿½ button, which will return the ï¿½success" button to an un-highlighted state. Similarly, if the user makes a mistake and accidentally clicks the ï¿½failï¿½ they can correct this mistake by clicking the ï¿½successï¿½ button, which will return the ï¿½fail" button to an un-highlighted state.
 
-“next round” button:
+ï¿½next roundï¿½ button:
 
-This button can only be clicked when “success” or “fail” for each bid card has been selected. The button is hidden as soon as the round number is advanced to the last round.
+This button can only be clicked when ï¿½successï¿½ or ï¿½failï¿½ for each bid card has been selected. The button is hidden as soon as the round number is advanced to the last round.
 
-For each “fail”, the player’s “points do the loose” for the round is subtracted from their current score. For each success, the player’s bid plus two is added to their score.
+For each ï¿½failï¿½, the playerï¿½s ï¿½points do the looseï¿½ for the round is subtracted from their current score. For each success, the playerï¿½s bid plus two is added to their score.
 
-After the scores are updated, advance the round number, update to the next dealer, update to the next first player, rest all bids to blank, reset the state of all “success” and “fail” to unselected.
+After the scores are updated, advance the round number, update to the next dealer, update to the next first player, rest all bids to blank, reset the state of all ï¿½successï¿½ and ï¿½failï¿½ to unselected.
 
 Both negative current scores and tied scores are both valid.
 
-“undo” button:
+ï¿½undoï¿½ button:
 
-reset the state of all “success” and “fail” to unselected.
+reset the state of all ï¿½successï¿½ and ï¿½failï¿½ to unselected.
 
-“Home” button:
+ï¿½Homeï¿½ button:
 
 Save the state of the game, if necessary, and return to the home screen. The game should be able to be resumed at any time in the future.
 
-“game over” button:
+ï¿½game overï¿½ button:
 
-This button is only visible on the last round of the game. It has the same validation rules and actions as the “next round” button and should share code whenever possible. The only difference is that instead of resetting the game in progress screen, after scores are updated it moves to the “game over screen”
+This button is only visible on the last round of the game. It has the same validation rules and actions as the ï¿½next roundï¿½ button and should share code whenever possible. The only difference is that instead of resetting the game in progress screen, after scores are updated it moves to the ï¿½game over screenï¿½
 
-“scoresheet view button”:
+ï¿½scoresheet view buttonï¿½:
 
-Navigates to the “scoresheet view” of the current game
+Navigates to the ï¿½scoresheet viewï¿½ of the current game
 
 **4\. scoresheet view**
 
-This screen can be used for both in progress games and completed games. If it’s an in progress game, also shows a “continue” button which navigates to the “game in progress screen” for the current round. It also shows a home button to go back to the home screen.
+This screen can be used for both in progress games and completed games. If itï¿½s an in progress game, also shows a ï¿½continueï¿½ button which navigates to the ï¿½game in progress screenï¿½ for the current round. It also shows a home button to go back to the home screen.
 
 This is a grid with the number of columns is the number of players plus one. There is a header row and then a number or rows equal to the number of rounds as determined by the number of players. In the first column is the round number (one per row, starting at 1 at the top and ending with the maximum round number at the bottom). For each row/column which represents a player in each round, show 3 numbers: their bid, their score for that round (either negative how many points they lost or their bid plus two), and their current score after that round was over. Any rounds which are not yet complete will be blank.
 
