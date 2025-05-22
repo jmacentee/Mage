@@ -11,6 +11,7 @@
         <input type="radio"
                name="dealer"
                value="@index"
+               checked="@((selectedDealer == index) ? true : false)"
                @onchange="EventCallback.Factory.Create<ChangeEventArgs>(this, e => selectedDealer = int.Parse(e.Value.ToString()))" />
         <input placeholder="Name" @bind="players[index].Name" />
         <input placeholder="Initials" maxlength="3" @bind="players[index].Initials" style="width:6em" />
@@ -37,6 +38,40 @@
 @code {
     private List<Player> players = Enumerable.Range(0, 6).Select(_ => new Player()).ToList();
     private int selectedDealer = -1;
+
+            
+    private void InitializeNewGame()
+    {
+        var lastGame = GameService.Games.FirstOrDefault();
+
+        if (lastGame != null)
+        {
+            // Restore player details
+            players = lastGame.Players.Select(p => new Player { Name = p.Name, Initials = p.Initials }).ToList();
+
+            // Determine next dealer
+            var previousDealer = lastGame.Rounds.FirstOrDefault()?.DealerIndex ?? -1;
+            if (previousDealer >= 0)
+            {
+                selectedDealer = (previousDealer + 1) % players.Count(p => !string.IsNullOrWhiteSpace(p.Name));
+            }
+
+            // Ensure the list always has 6 players
+            while (players.Count < 6)
+            {
+                players.Add(new Player());
+            }
+
+
+        }
+        
+    }
+
+    protected override void OnInitialized()
+    {
+        InitializeNewGame();
+    }
+    
 
     bool CanStart =>
         players.Count(p => !string.IsNullOrWhiteSpace(p.Name) && !string.IsNullOrWhiteSpace(p.Initials)) >= 3 &&

@@ -2,9 +2,10 @@
 @inject GameService GameService
 @inject NavigationManager Nav
 
-<h1>Mage 🧙‍♂️</h1>
-<h2>A Scorekeeping app for Wizard</h2>
+<header class="sticky">
+    <h2>Mage 🧙‍♂️<sub> A Scorekeeping app for Wizard</sub></h2>
 
+</header>
 
 @if(GameService.Initialized){
     @if (GameService.Games.Count == 0)
@@ -14,7 +15,7 @@
     else
     {
         
-        <ul>
+        <ul class="homelist">
             @foreach (var game in GameService.Games)
             {
                 var dealerIndex = game.Rounds.FirstOrDefault()?.DealerIndex; // Get the dealer index from the first round
