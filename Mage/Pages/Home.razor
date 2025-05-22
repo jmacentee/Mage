@@ -4,8 +4,7 @@
 
 <h1>Mage 🧙‍♂️</h1>
 <h2>A Scorekeeping app for Wizard</h2>
-<button @onclick="ClearHistory">Clear History</button>
-<button @onclick="NewGame">New Game</button>
+
 
 @if(GameService.Initialized){
     @if (GameService.Games.Count == 0)
@@ -20,7 +19,7 @@
                 <li @onclick="() => NavigateToGame(game)" class="@GetListClass(game)">
                     <b>@game.StartDate.ToShortDateString()</b>
                     - Players: @string.Join(", ", game.Players.Select(p => p.Initials))
-                    - @(game.IsComplete ? "Complete" : $"In Progress (Round {game.Rounds.Count})")
+                    - @(game.IsComplete ? "Complete" : $"(Round {game.Rounds.Count})")
                 </li>
             }
         </ul>
@@ -28,6 +27,13 @@
 }else{
     <p>loading...</p>
 }
+
+<footer class="sticky">
+    
+        <button @onclick="ClearHistory">Clear History</button>
+    <button @onclick="NewGame" class="primary">New Game</button>
+    
+</footer>
 
 @code {
     string GetListClass(Game game){

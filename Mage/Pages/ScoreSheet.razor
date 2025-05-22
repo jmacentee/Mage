@@ -1,4 +1,4 @@
-@page "/scoresheet"
+﻿@page "/scoresheet"
 @inject GameService GameService
 @inject NavigationManager Nav
 
@@ -6,12 +6,15 @@
 @if (GameService.CurrentGame is null)
 {
     <p>No active game.</p>
+    <footer class="sticky">
+        <button @onclick=@(() => Nav.NavigateTo("./")) class="primary">🏠</button>
+    </footer>
 }
 else
 {
     <p>Bid | Round Points | End of Round Score</p>
     var game = GameService.CurrentGame;
-    <table class="scoresheet">
+    <table class="scoresheet striped">
         <thead>
             <tr>
                 <th>Round</th>
@@ -37,12 +40,17 @@ else
             }
         </tbody>
     </table>
-    @if (!game.IsComplete)
-    {
-        <button @onclick=@(() => Nav.NavigateTo("./newgame"))>New Game</button>
-    }
+
+    <footer class="sticky">
+        <button @onclick=@(() => Nav.NavigateTo("./"))>🏠</button>
+        @if (!game.IsComplete)
+        {
+            <button @onclick=@(() => Nav.NavigateTo("./inprogress")) class="primary">Resume</button>
+            
+        }
+        
+    </footer>
        
     
 
 }
-<button @onclick=@(() => Nav.NavigateTo("./"))>Home</button>

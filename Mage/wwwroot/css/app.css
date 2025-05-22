@@ -123,9 +123,41 @@ code {
     background-color:lightgray;
 }
 
+.bid-card{
+    margin-right:10px;
+}
+.dealer.bid-card {
+    background-color: lightblue;
+    box-shadow: 5px 5px 3px gray;
+    margin-bottom: 7px;
+}
+.first.bid-card {
+    background-color: lightsteelblue;
+    box-shadow: 5px 5px 3px gray;
+    margin-bottom: 7px;
+}
+
 @media screen and (max-width: 768px) {
+    body{
+        margin:0;
+    }
+    /*html, body,#app, .main-layout, .main-layout > .content {
+        height: 100%;
+        box-sizing: border-box;
+        position:relative;
+    }*/
+    table .scoresheet, .bid-cards {
+        margin-bottom: 100px;
+    }
     table.scoresheet th, table.scoresheet td {
         padding: 1px;
+        
         /* padding:calc(2 * var(--universal-padding)); */
+    }
+
+    #app footer{
+        position: fixed;
+        bottom: 0;
+        width:100%;
     }
 }

@@ -1,9 +1,9 @@
-@page "/newgame"
+﻿@page "/newgame"
 @inject GameService GameService
 @inject NavigationManager Nav
 
 <h3>New Game</h3>
-
+<p>Enter the names and initals for 3 to 6 players. Select which player will be the dealer for the first round.</p>
 @for (int i = 0; i < 6; i++)
 {
     var index = i;
@@ -28,8 +28,11 @@
      <p>@players[selectedDealer].Name</p>
 }
  *@
-<button @onclick="Cancel">Cancel</button>
-<button @onclick="StartGame" disabled="@( !CanStart )">Start Game</button>
+<footer class="sticky">
+    <button @onclick=@(() => Nav.NavigateTo("./"))>🏠</button>
+    <button @onclick="StartGame" disabled="@( !CanStart )" class="primary">Start Game</button>
+</footer>
+
 
 @code {
     private List<Player> players = Enumerable.Range(0, 6).Select(_ => new Player()).ToList();
@@ -40,7 +43,7 @@
         selectedDealer >= 0 &&
         !string.IsNullOrWhiteSpace(players[selectedDealer].Name);
 
-    void Cancel() => Nav.NavigateTo("./");
+    
 
     void StartGame()
     {

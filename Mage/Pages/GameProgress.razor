@@ -3,43 +3,63 @@
 @inject NavigationManager Nav
 @inject LocalStorageService Storage
 
-<h3>Game In Progress - Round @roundNumber</h3>
 
 @if (game is not null)
 {
-    <p><b>Dealer:</b> @dealerName</p>
-    <p><b>First Player:</b> @firstPlayerName</p>
+    <header class="sticky">
+        <h3>Game In Progress - Round @roundNumber</h3>
+        <p><b>Dealer:</b> @dealerName</p>
+        <p><b>First Player:</b> @firstPlayerName</p>
+    </header>
 
-    @foreach (var player in game.Players)
-    {
-        <div class="bid-card">
-            <b>@player.Initials (@player.Score pts)</b><br />
-            <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Initials).BidValue" placeholder="Bid" />
 
-            <button class="@GetButtonClass(player.Initials, true)" @onclick="() => SetSuccess(player.Initials)">😊</button>
-            <button class="@GetButtonClass(player.Initials, false)" @onclick="() => SetFail(player.Initials)">☹️</button>
 
-            @if (failSelected.GetValueOrDefault(player.Initials))
-            {
-                <input type="number" min="1" max="@roundNumber" placeholder="Loss" @bind="GetBid(player.Initials).PointsLost" />
-            }
-        </div>
-    }
+    <div class="bid-cards">
+        @{
+            int PlayerIndex = 0;
+        }
+        @foreach (var player in game.Players)
+        {
+            
+            <div class="@GetRoundTitleClass(PlayerIndex)">
+                <b>@player.Initials (@player.Score pts) @GetRoundTitle(PlayerIndex)</b><br />
+                <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Initials).BidValue" placeholder="Bid" />
 
-    <div class="actions">
-        <button @onclick="Undo">Undo</button>
-        <button @onclick="ViewScoresheet">Scoresheet</button>
-        <button @onclick="ToHome">Home</button>
+                <button class="@GetButtonClass(player.Initials, true)" @onclick="() => SetSuccess(player.Initials)">😊</button>
+                <button class="@GetButtonClass(player.Initials, false)" @onclick="() => SetFail(player.Initials)">☹️</button>
+
+                @if (failSelected.GetValueOrDefault(player.Initials))
+                {
+                    <input type="number" min="1" max="@roundNumber" placeholder="Loss" @bind="GetBid(player.Initials).PointsLost" />
+                }
+            </div>
+            PlayerIndex++;
+        }
+    </div>
+    <footer class="sticky">
+        <button @onclick="Undo">⟲</button>
+        <button @onclick="ViewScoresheet">🧮</button>
+        <button @onclick="ToHome">🏠</button>
         @if (!IsFinalRound)
 
         {
 
-            <button @onclick="NextRound" disabled="@( !AllPlayersSubmitted )">Next Round</button>
+            <button @onclick="NextRound" disabled="@( !AllPlayersSubmitted )" class="primary">Next Round</button>
 
         }else{
-            <button @onclick="CompleteGame" disabled="@( !AllPlayersSubmitted)">Game Over</button>
+            <button @onclick="CompleteGame" disabled="@( !AllPlayersSubmitted)" class="primary">Game Over</button>
         }
-    </div>
+    </footer>
+}else{
+
+    <header class="sticky">
+        <h3>No Game In Progress</h3>
+
+    </header>
+
+    <footer class="sticky">
+        <button @onclick="ToHome" class="primary">🏠</button>
+    </footer>
 }
 
 @code {
@@ -58,6 +78,20 @@
 
         StartRound();
 
+    }
+
+    protected string GetRoundTitle(int PlayerIndex)
+    {
+        if (PlayerIndex == currentRound.DealerIndex) return " Dealer!";
+        if (PlayerIndex == currentRound.FirstPlayerIndex) return " First!";
+        return "";
+    }
+
+    protected string GetRoundTitleClass(int PlayerIndex)
+    {
+        if (PlayerIndex == currentRound.DealerIndex) return "dealer bid-card";
+        if (PlayerIndex == currentRound.FirstPlayerIndex) return "first bid-card";
+        return "bid-card";
     }
 
     private void StartRound(){
