@@ -9,8 +9,9 @@
 }
 else
 {
+    <p>Bid | Round Points | End of Round Score</p>
     var game = GameService.CurrentGame;
-    <table>
+    <table class="scoresheet">
         <thead>
             <tr>
                 <th>Round</th>
@@ -24,12 +25,12 @@ else
             @for (int r = 0; r < game.Rounds.Count; r++)
             {
                 <tr>
-                    <td>@(r + 1)</td>
+                    <td data-label="Round">@(r + 1)</td>
                     @foreach (var p in game.Players)
                     {
                         var bid = game.Rounds[r].Bids.FirstOrDefault(b => b.PlayerInitials == p.Initials);
-                        <td>
-                            @bid?.BidValue | @(bid?.Success == true ? bid.BidValue + 2 : $"-{bid?.PointsLost ?? 0}") | @bid?.RoundPoints;
+                        <td data-label="@bid?.PlayerInitials">
+                            @bid?.BidValue | @(bid?.Success == true ? bid.BidValue + 2 : $"-{bid?.PointsLost ?? 0}") | @bid?.RoundPoints
                         </td>
                     }
                 </tr>
@@ -41,6 +42,7 @@ else
         <button @onclick=@(() => Nav.NavigateTo("./newgame"))>New Game</button>
     }
        
-    <button @onclick=@(() => Nav.NavigateTo("./"))>Home</button>
+    
 
 }
+<button @onclick=@(() => Nav.NavigateTo("./"))>Home</button>

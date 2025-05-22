@@ -21,7 +21,7 @@
 
             @if (failSelected.GetValueOrDefault(player.Initials))
             {
-                <input type="number" min="1" max="@roundNumber" placeholder="Loss Points" @bind="GetBid(player.Initials).PointsLost" />
+                <input type="number" min="1" max="@roundNumber" placeholder="Loss" @bind="GetBid(player.Initials).PointsLost" />
             }
         </div>
     }

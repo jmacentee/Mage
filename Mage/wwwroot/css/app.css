@@ -122,3 +122,10 @@ code {
     min-height: 30dp;
     background-color:lightgray;
 }
+
+@media screen and (max-width: 768px) {
+    table.scoresheet th, table.scoresheet td {
+        padding: 1px;
+        /* padding:calc(2 * var(--universal-padding)); */
+    }
+}
