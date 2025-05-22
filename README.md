@@ -6,6 +6,7 @@ Currently hosted on github pages: https://jmacentee.github.io/Mage/
 Current Issues
 - On Android you get a red validtion error for out of range nubmers, but nothing from stopping you entering them
 - Style is not complete
+- Clear history does not appear to clear the local storage, only the home screen view. Next new game + save after a clear does.
 
 Specification
 -
