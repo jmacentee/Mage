@@ -13,7 +13,7 @@
                value="@index"
                checked="@((selectedDealer == index) ? true : false)"
                @onchange="EventCallback.Factory.Create<ChangeEventArgs>(this, e => selectedDealer = int.Parse(e.Value.ToString()))" />
-        <input placeholder="Name" @bind="players[index].Name" />
+        <input placeholder="Name" @bind="players[index].Name" style="width:8em" />
         <input placeholder="Initials" maxlength="3" @bind="players[index].Initials" style="width:6em" />
     </div>
 }
