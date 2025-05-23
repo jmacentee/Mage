@@ -86,7 +86,7 @@ Current score for each player is 0 for Round 1.
 
 If the "success" button is clicked, it will toggle as highlighted. The user will be counted as a "success" when the "next round" or "game over" buttons are clicked.
 
-If the "fail" button is clicked, it will toggle as highlighted. A popup prompt will as "how many points do their loose". Those loss points will be recorded when the "next round" or "game over" buttons are clicked. There is no default value of the lost points.
+If the "fail" button is clicked, it will toggle as highlighted. A popup prompt will as "tricks taken". The difference between their bid and their tricks taken is the points they loose.  Those loss points will be recorded when the "next round" or "game over" buttons are clicked. There is no default value of the lost points.
 
 For each bid card, only one of the "fail" or "success" buttons can be clicked at a time. If the user makes a mistake and accidentally clicks the "success" they can correct this mistake by clicking the "fail" button, which will return the "success" button to an un-highlighted state. Similarly, if the user makes a mistake and accidentally clicks the "fail" they can correct this mistake by clicking the "success" button, which will return the "fail" button to an un-highlighted state.
 
@@ -94,7 +94,7 @@ For each bid card, only one of the "fail" or "success" buttons can be clicked at
 
 This button can only be clicked when "success" or "fail" for each bid card has been selected. The button is hidden as soon as the round number is advanced to the last round.
 
-For each "fail", the player"s "points do the loose" for the round is subtracted from their current score. For each success, the player"s bid plus two is added to their score.
+For each "fail", the player"s points lost for the round is subtracted from their current score. For each success, the player"s bid plus two is added to their score.
 
 After the scores are updated, advance the round number, update to the next dealer, update to the next first player, rest all bids to blank, reset the state of all "success" and "fail" to unselected.
 

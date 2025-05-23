@@ -7,7 +7,7 @@
 @if (game is not null)
 {
     <header class="sticky">
-        <h3>Game In Progress - Round @roundNumber</h3>
+        <h3>Game In Progress - Round @roundNumber (of @MaxRounds(game.Players.Count))</h3>
         <p><b>Dealer:</b> @dealerName</p>
         <p><b>First Player:</b> @firstPlayerName</p>
     </header>
@@ -30,7 +30,7 @@
 
                 @if (failSelected.GetValueOrDefault(player.Initials))
                 {
-                    <input type="number" min="1" max="@roundNumber" placeholder="Loss" @bind="GetBid(player.Initials).PointsLost" />
+                    <input type="number" min="0" max="@roundNumber" placeholder="Took" @bind="GetBid(player.Initials).TricksTaken" />
                 }
             </div>
             PlayerIndex++;
@@ -82,15 +82,11 @@
     private int? TotalTricksTaken => game?.Players.Sum(player =>
     {
         var bid = GetBid(player.Initials);
-        if (bid.Success == true)
-        {
-            return bid.BidValue;
-        }
-        else if (bid.Success == false && bid.PointsLost.HasValue)
-        {
-            return Math.Abs((int)( bid.BidValue - bid.PointsLost));
-        }
-        return 0; // If Success is null, exclude this bid.
+        if (bid == null) return 0;
+        if (bid.Success == null) return 0;
+        if (!bid.TricksTaken.HasValue == null) return 0;
+        
+        return bid.TricksTaken;
     });
 
 
@@ -147,14 +143,16 @@
         failSelected[initials] = false;
         Bid bid = GetBid(initials);
         bid.Success = true;
-        bid.PointsLost = 0;
+        bid.TricksTaken = bid.BidValue;
     }
 
     void SetFail(string initials)
     {
         failSelected[initials] = true;
         successSelected[initials] = false;
-        GetBid(initials).Success = false;
+        Bid bid = GetBid(initials);
+        bid.Success = false;
+        bid.TricksTaken = null;
     }
 
     string GetButtonClass(string initials, bool isSuccess)
@@ -171,15 +169,13 @@
     {
         successSelected.Clear();
         failSelected.Clear();
-
         foreach (var bid in currentRound.Bids)
         {
-            bid.PointsLost = null;
+            bid.TricksTaken = null;
             bid.Success = null;
         }
-
-        //currentRound?.Bids.Clear();
     }
+
 
     void NextRound()
     {
@@ -209,11 +205,11 @@
         foreach (var bid in currentRound!.Bids)
         {
             var player = game!.Players.First(p => p.Initials == bid.PlayerInitials);
+
             if (bid.Success == true)
                 player.Score += bid.BidValue + 2;
-            else if (bid.PointsLost.HasValue)
-                player.Score -= bid.PointsLost.Value;
-
+            else if (bid.TricksTaken.HasValue)
+                player.Score -= Math.Abs(bid.BidValue - bid.TricksTaken.Value);
 
 
             bid.RoundPoints = player.Score;
@@ -250,11 +246,19 @@
             return false;
 
         // Ensure PointsLost values are valid for players who failed
+        // if (!game.Players.All(p =>
+        //     GetBid(p.Initials).Success != false || // If Success is not false, ignore check
+        //     (GetBid(p.Initials).PointsLost >= 1 && GetBid(p.Initials).PointsLost <= roundNumber)))
+        //     return false;
+
+        // Ensure all TricksTaken are within allowed range
         if (!game.Players.All(p =>
-            GetBid(p.Initials).Success != false || // If Success is not false, ignore check
-            (GetBid(p.Initials).PointsLost >= 1 && GetBid(p.Initials).PointsLost <= roundNumber)))
+            GetBid(p.Initials).TricksTaken >= 0 &&
+            GetBid(p.Initials).TricksTaken <= roundNumber))
             return false;
 
+        if (game.Players.Any(p => GetBid(p.Initials).Success==false && GetBid(p.Initials).TricksTaken == GetBid(p.Initials).BidValue))
+            return false;
 
         if (TotalTricksTaken != roundNumber) return false;
 

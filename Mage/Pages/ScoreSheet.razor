@@ -12,7 +12,7 @@
 }
 else
 {
-    <p>Bid | Round Points | End of Round Score</p>
+    <p>Bid | Tricks Taken | End of Round Score</p>
     var game = GameService.CurrentGame;
     <table class="scoresheet striped">
         <thead>
@@ -33,7 +33,8 @@ else
                     {
                         var bid = game.Rounds[r].Bids.FirstOrDefault(b => b.PlayerInitials == p.Initials);
                         <td data-label="@bid?.PlayerInitials">
-                            @bid?.BidValue | @(bid?.Success == true ? bid.BidValue + 2 : $"-{bid?.PointsLost ?? 0}") | @bid?.RoundPoints
+                            @(bid?.Success.HasValue == true ? (bid?.Success == true ? $"😊" : $"☹️") : $"")
+                            @bid?.BidValue | @bid?.TricksTaken | @bid?.RoundPoints
                         </td>
                     }
                 </tr>

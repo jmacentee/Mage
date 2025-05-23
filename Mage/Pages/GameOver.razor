@@ -7,7 +7,7 @@
 
 
 
-<h3>Game Over</h3>
+<h2>Game Over 🧙‍♂️</h2>
 
 @if (GameService.CurrentGame is not null)
 {
@@ -15,28 +15,31 @@
     var maxScore = game.Players.Max(p => p.Score);
     var winners = game.Players.Where(p => p.Score == maxScore).ToList();
 
-    <div class="confetti">🎉</div>
+    <div class="confetti">🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉</div>
 
     @if (winners.Count == 1)
     {
-        <h2>Winner: @winners.First().Name (@winners.First().Score pts)</h2>
+        <h2>Winner: 😊 @winners.First().Name (@winners.First().Score pts)</h2>
     }
     else
     {
-        <h2>Tie!</h2>
-        <ul>
+        <h2>Tie?!!</h2>
+        
         @foreach (var w in winners)
         {
-            <li>@w.Name (@w.Score pts)</li>
+                <h2> 😊@w.Name (@w.Score pts)</h2>
         }
-        </ul>
+        
     }
+
+    <div class="confetti">🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉</div>
+
 
     <h4>Final Scores:</h4>
     <ul>
     @foreach (var p in game.Players)
     {
-        <li>@p.Name - @p.Score pts</li>
+            <li>🧙@p.Name - @p.Score pts</li>
     }
     </ul>
 }
