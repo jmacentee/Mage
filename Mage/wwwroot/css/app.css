@@ -1,4 +1,4 @@
-body {
+﻿body {
     font-family: sans-serif;
     margin: 1rem;
     /*--back-color: dimgrey;*/
@@ -97,6 +97,11 @@ code {
     text-align: start;
 }
 
+.ToggleSuccess, .selectedSuccess, .selectedFail {
+    margin-top: 0;
+    margin-left: 2px;
+}
+
 .ToggleSuccess{
     border: solid 8px lightgrey;
 }
@@ -123,18 +128,45 @@ code {
     background-color:lightgray;
 }
 
-.bid-card{
-    margin-right:10px;
+.bid-card {
+    margin: 10px;
+    background-color: #F5F5F5;
+    padding-left: 1em;
+    border-left: solid 10px #E8E8E8;
+    border-bottom: solid 1px #E8E8E8;
 }
+
+    .bid-card input::placeholder {
+        font-size: 0.7em;
+    }
+
+    .bid-card input {
+        width:4em;
+        
+    }
+
+.bid-card b::before {
+    content: "🧙 ";
+    font-size:1.6em;
+}
+
 .dealer.bid-card {
-    background-color: lightblue;
-    box-shadow: 5px 5px 3px gray;
-    margin-bottom: 7px;
+    
+    border-left: solid 10px yellow;
 }
+
+    .dealer.bid-card b::before {
+        content: " 🫅 ";
+        font-size: 1.6em;
+    }
+
 .first.bid-card {
-    background-color: lightsteelblue;
-    box-shadow: 5px 5px 3px gray;
-    margin-bottom: 7px;
+    border-left: solid 10px lightsteelblue;
+}
+
+.first.bid-card b::before {
+    content: " 🙋‍♂️ ";
+    font-size: 1.6em;
 }
 
 @media screen and (max-width: 768px) {
