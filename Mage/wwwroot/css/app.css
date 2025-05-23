@@ -136,6 +136,10 @@ code {
     border-bottom: solid 1px #E8E8E8;
 }
 
+    .bid-card .initials {
+        font-size: 1.6em;
+    }
+
     .bid-card input::placeholder {
         font-size: 0.7em;
     }
@@ -178,7 +182,7 @@ code {
         box-sizing: border-box;
         position:relative;
     }*/
-    table.scoresheet, .bid-cards, .homelist {
+    table.scoresheet, .bid-cards, .homelist, .HelpPage {
         margin-bottom: 100px;
     }
     table.scoresheet th, table.scoresheet td {

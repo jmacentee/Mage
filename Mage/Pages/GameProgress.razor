@@ -20,9 +20,9 @@
         }
         @foreach (var player in game.Players)
         {
-            
+
             <div class="@GetRoundTitleClass(PlayerIndex)">
-                <b>@player.Initials (@player.Score pts) @GetRoundTitle(PlayerIndex)</b><br />
+                <b><span class="initials">@player.Initials</span> (@player.Score pts) @GetRoundTitle(PlayerIndex)</b><br />
                 <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Initials).BidValue" placeholder="Bid" />
 
                 <button class="@GetButtonClass(player.Initials, true)" @onclick="() => SetSuccess(player.Initials)">😊</button>
@@ -44,11 +44,12 @@
 
         {
 
-            <button @onclick="NextRound" disabled="@( !AllPlayersSubmitted )" class="primary">Next Round</button>
+            <button @onclick="NextRound" disabled="@( !GameIsFinal() )" class="primary">Next Round</button>
 
         }else{
-            <button @onclick="CompleteGame" disabled="@( !AllPlayersSubmitted)" class="primary">Game Over</button>
+            <button @onclick="CompleteGame" disabled="@( !GameIsFinal() )" class="primary">Game Over</button>
         }
+        <span class="@ShowTricks()">Tricks: @TotalTricksTaken</span>  
     </footer>
 }else{
 
@@ -58,7 +59,8 @@
     </header>
 
     <footer class="sticky">
-        <button @onclick="ToHome" class="primary">🏠</button>
+        <button @onclick="ToHome">🏠</button>
+
     </footer>
 }
 
@@ -71,6 +73,27 @@
 
     Dictionary<string, bool> successSelected = new();
     Dictionary<string, bool> failSelected = new();
+
+    private string ShowTricks(){
+        if (TotalTricksTaken > 0) return "";
+        return "hidden";
+    }
+
+    private int? TotalTricksTaken => game?.Players.Sum(player =>
+    {
+        var bid = GetBid(player.Initials);
+        if (bid.Success == true)
+        {
+            return bid.BidValue;
+        }
+        else if (bid.Success == false && bid.PointsLost.HasValue)
+        {
+            return Math.Abs((int)( bid.BidValue - bid.PointsLost));
+        }
+        return 0; // If Success is null, exclude this bid.
+    });
+
+
 
     protected override void OnInitialized()
     {
@@ -122,7 +145,9 @@
     {
         successSelected[initials] = true;
         failSelected[initials] = false;
-        GetBid(initials).Success = true;
+        Bid bid = GetBid(initials);
+        bid.Success = true;
+        bid.PointsLost = 0;
     }
 
     void SetFail(string initials)
@@ -146,7 +171,14 @@
     {
         successSelected.Clear();
         failSelected.Clear();
-        currentRound?.Bids.Clear();
+
+        foreach (var bid in currentRound.Bids)
+        {
+            bid.PointsLost = null;
+            bid.Success = null;
+        }
+
+        //currentRound?.Bids.Clear();
     }
 
     void NextRound()
@@ -203,6 +235,33 @@
 
     bool IsFinalRound =>
         game != null && game.Rounds.Count >= MaxRounds(game.Players.Count);
+
+
+    bool GameIsFinal()
+    {
+        if (game == null) return false;
+        if (currentRound == null) return false;
+        if (!AllPlayersSubmitted) return false;
+
+        // Ensure all bid values are within allowed range
+        if (!game.Players.All(p =>
+            GetBid(p.Initials).BidValue >= 0 &&
+            GetBid(p.Initials).BidValue <= roundNumber))
+            return false;
+
+        // Ensure PointsLost values are valid for players who failed
+        if (!game.Players.All(p =>
+            GetBid(p.Initials).Success != false || // If Success is not false, ignore check
+            (GetBid(p.Initials).PointsLost >= 1 && GetBid(p.Initials).PointsLost <= roundNumber)))
+            return false;
+
+
+        if (TotalTricksTaken != roundNumber) return false;
+
+        return true; // If all conditions are met, game is final
+
+
+    }
 
     int MaxRounds(int count) => count switch
     {

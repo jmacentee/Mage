@@ -1,0 +1,61 @@
+﻿@page "/help"
+@inject NavigationManager Nav
+
+<header class="sticky">
+    <h2>Mage 🧙‍♂️<sub> A Scorekeeping app for Wizard</sub></h2>
+
+</header>
+<div class="HelpPage">
+    <h3>How to Use</h3>
+    <p>Buy & Play <a href="https://www.usgamesinc.com/Cards_and_Games/wizard-card-games/original-wizard-r-card-game.html" target="_blank">Original Wizard® Card Game</a></p>
+    <p>On the <button>🏠</button> Home Screen, start a <button class="primary">New Game</button></p>
+    <p>
+        On the new game screen, enter the names and initials for 3 to 6 players. Select which player will be the dealer for the first round.  
+        Each successive new game you start, the previous game will be copied but the first dealer will be advanced by one.
+        You can use <button>⟲</button> Reset if you want to start fresh.
+
+    </p>
+    <p>The "Game In Progress" screen shows the details for the current round.</p>
+    <div class="bid-cards">
+        <div class="dealer bid-card">
+            <b><span class="">This is the dealer</span></b>
+        </div>
+        <div class="first bid-card">
+            <b><span class="">This is the starting player</span></b>
+        </div>
+        <div class="bid-card">
+            <b><span class="">This player made their bid</span></b><!--!--><br>
+            <button class="selectedSuccess">😊</button>
+        </div>
+
+        <div class="bid-card">
+            <b><span class="">This player did not.</span></b><!--!--><br>
+            <button class="ToggleSuccess"><!--!-->😊</button><!--!-->
+            <button class="selectedFail"><!--!-->☹️</button>
+        </div>
+        <div class="bid-card">
+            <b><span class="">Before you start playing, put the player's bid here</span></b><!--!--><br>
+            <input type="number" min="0" max="3" placeholder="Bid" style="box-shadow: 0 0 50px 15px #48abe0;">
+            <button class="ToggleSuccess">😊</button>
+        </div>
+        <div class="bid-card">
+            <b><span class="">If the player missed their bid, put <u>how many points they lost</u> here</span></b><!--!--><br>
+            <button class="selectedFail"><!--!-->☹️</button>
+            <input type="number" min="1" max="3" placeholder="Loss" style="box-shadow: 0 0 50px 15px #48abe0;">
+        </div>
+
+
+    </div>
+    <p>Bids must be between 0 and the round number.  Lost points have to be between 1 and the round number.  Every has to make their bid or miss it.  Total tricks taken
+        has to equal the round number.  Once all that is right, you can press <button class="primary">Next Round</button> to move on or 
+        <button class="primary">Game Over</button> if it's the last round. The scores will be automatically calculated.  You can see the bids, points, and scores for each round
+        on the <button>🧮</button> score sheet page.
+    </p>
+</div>
+
+
+<footer class="sticky">
+    <button @onclick=@(() => Nav.NavigateTo("./"))>🏠</button>
+
+</footer>
+

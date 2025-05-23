@@ -33,9 +33,10 @@
 
 <footer class="sticky">
     
-        <button @onclick="ClearHistory">Clear History</button>
+    <button @onclick="ClearHistory">Clear</button>
+    <button @onclick=@(() => Nav.NavigateTo("./help"))>❓</button>
+    <button @onclick=@(() => Nav.NavigateTo("./about"))>ⓘ</button>
     <button @onclick="NewGame" class="primary">New Game</button>
-    
 </footer>
 
 @code {
@@ -50,6 +51,7 @@
     void ClearHistory()
     {
         GameService.Games.Clear();
+        GameService.SaveGame();
         StateHasChanged();
     }
 

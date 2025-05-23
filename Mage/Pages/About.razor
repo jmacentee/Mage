@@ -1,0 +1,25 @@
+﻿@page "/about"
+@inject NavigationManager Nav
+
+<header class="sticky">
+    <h2>Mage 🧙‍♂️<sub> A Scorekeeping app for Wizard</sub></h2>
+
+</header>
+
+<h3>About</h3>
+<p>Developed just for fun and to be lazy about not printing scoresheets anymore by 
+    <nobr><a href="https://www.linkedin.com/in/macentee/" target="_blank">Jason Mac Entee</a>.</nobr>
+</p>
+<p>Source code freely given for your own use at <a href="https://github.com/jmacentee/Mage" target="_blank">github</a>.</p>
+<p>Hosted on <a href="https://jmacentee.github.io/Mage/" target="_blank">github pages</a>.</p>
+
+<p>So, do you want to develop an app?  Contact us at <a href="https://digitalmettle.com/?source=mage" target="_blank">Digital Mettle</a>.</p>
+<p style="text-align:center;"><a href="https://digitalmettle.com/?source=mage" target="_blank"><img src="https://digitalmettle.com/wp-content/uploads/2020/07/dm-logo-tagline.png"/></a></p>
+
+<p>Development assistance provided sometimes hilariously badly by ChatGPT and Copilot.  Full conversations are in files in the repo.  So is the original specification document.</p>
+
+<footer class="sticky">
+    <button @onclick=@(() => Nav.NavigateTo("./"))>🏠</button>
+
+</footer>
+

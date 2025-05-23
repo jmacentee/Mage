@@ -30,6 +30,7 @@
 }
  *@
 <footer class="sticky">
+    <button @onclick="Reset">⟲</button>
     <button @onclick=@(() => Nav.NavigateTo("./"))>🏠</button>
     <button @onclick="StartGame" disabled="@( !CanStart )" class="primary">Start Game</button>
 </footer>
@@ -39,6 +40,10 @@
     private List<Player> players = Enumerable.Range(0, 6).Select(_ => new Player()).ToList();
     private int selectedDealer = -1;
 
+    private void Reset(){
+        players = Enumerable.Range(0, 6).Select(_ => new Player()).ToList();
+        selectedDealer = -1;
+    }
             
     private void InitializeNewGame()
     {
