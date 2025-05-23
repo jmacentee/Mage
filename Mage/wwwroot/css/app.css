@@ -196,4 +196,8 @@ code {
         bottom: 0;
         width:100%;
     }
+
+    #app footer.sticky button {
+        margin:3px;
+    }
 }
