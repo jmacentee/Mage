@@ -22,7 +22,7 @@
         {
 
             <div class="@GetRoundTitleClass(PlayerIndex)">
-                <b><span class="initials">@player.Initials</span> (@player.Score pts) @GetRoundTitle(PlayerIndex)</b><br />
+                <b><span class="initials">@player.Name</span> (@player.Score pts) @GetRoundTitle(PlayerIndex)</b><br />
                 <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Initials).BidValue" placeholder="Bid" />
 
                 <button class="@GetButtonClass(player.Initials, true)" @onclick="() => SetSuccess(player.Initials)">😊</button>
