@@ -7,7 +7,7 @@
 @if (game is not null)
 {
     <header class="sticky">
-        <h3>Game In Progress - Round @roundNumber (of @MaxRounds(game.Players.Count))</h3>
+        <h3>@* Game In Progress -  *@Round @roundNumber (of @MaxRounds(game.Players.Count))  <span class="@GetRoundTypeClass()"><span class="RoundTypeCount">@TricksDifference</span></span></h3>
         <p><b>Dealer:</b> @dealerName</p>
         <p><b>First Player:</b> @firstPlayerName</p>
     </header>
@@ -23,14 +23,17 @@
 
             <div class="@GetRoundTitleClass(PlayerIndex)">
                 <b><span class="initials">@player.Name</span> (@player.Score pts) @GetRoundTitle(PlayerIndex)</b><br />
-                <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Initials).BidValue" placeholder="Bid" />
+                <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Initials).BidValue" placeholder="Bid" 
+                @bind:event="oninput"
+                @onchange="() => OnBidValueChanged(player.Initials)"
+                onfocus="this.select();" />
 
                 <button class="@GetButtonClass(player.Initials, true)" @onclick="() => SetSuccess(player.Initials)">😊</button>
                 <button class="@GetButtonClass(player.Initials, false)" @onclick="() => SetFail(player.Initials)">☹️</button>
 
                 @if (failSelected.GetValueOrDefault(player.Initials))
                 {
-                    <input type="number" min="0" max="@roundNumber" placeholder="Took" @bind="GetBid(player.Initials).TricksTaken" />
+                    <input type="number" min="0" max="@roundNumber" placeholder="Took" @bind="GetBid(player.Initials).TricksTaken" @bind:event="oninput" onfocus="this.select();" />
                 }
             </div>
             PlayerIndex++;
@@ -85,11 +88,27 @@
         if (bid == null) return 0;
         if (bid.Success == null) return 0;
         if (!bid.TricksTaken.HasValue == null) return 0;
-        
+
         return bid.TricksTaken;
     });
 
+    private int? TotalTricksBid => game?.Players.Sum(player =>
+    {
+        var bid = GetBid(player.Initials);
+        if (bid == null) return 0;
+        return bid.BidValue;
+    });
 
+
+    protected string GetRoundTypeClass(){
+        if (TotalTricksBid == 0) return "RoundType hidden";
+        if (TotalTricksBid == roundNumber) return "RoundType CoOp";
+        if (TotalTricksBid > roundNumber) return "RoundType Taking";
+        if (TotalTricksBid < roundNumber) return "RoundType Ducking";
+        return "";
+    }
+
+    private int? TricksDifference => Math.Abs(roundNumber - TotalTricksBid.GetValueOrDefault());
 
     protected override void OnInitialized()
     {
@@ -152,6 +171,15 @@
         successSelected[initials] = false;
         Bid bid = GetBid(initials);
         bid.Success = false;
+        bid.TricksTaken = null;
+    }
+
+    private void OnBidValueChanged(string initials)
+    {
+        var bid = GetBid(initials);
+        failSelected[initials] = false;
+        successSelected[initials] = false;
+        bid.Success = null;
         bid.TricksTaken = null;
     }
 

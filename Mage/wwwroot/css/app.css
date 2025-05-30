@@ -173,8 +173,48 @@ code {
     font-size: 1.6em;
 }
 
-@media screen and (max-width: 768px) {
-    body{
+.RoundType{
+    position:absolute;
+    right:0;
+}
+
+.HelpPage .RoundType {
+    position: initial;
+   
+}
+
+.RoundType.hidden {
+    display: none;
+}
+
+    .RoundType .RoundTypeCount {
+        vertical-align: super;
+        font-size:0.8em;
+    }
+
+    .RoundType.CoOp::before {
+        content: " 🎭 ";
+    }
+
+    .RoundType.CoOp .RoundTypeCount {
+        display: none;
+    }
+
+.HelpPage .RoundType.CoOp .RoundTypeCount {
+    display: inline;
+}
+
+    .RoundType.Taking::before {
+        content: " 🦝 ";
+    }
+
+    .RoundType.Ducking::before {
+        content: " 🦆 ";
+    }
+
+
+    @media screen and (max-width: 768px) {
+        body{
         margin:0;
     }
     /*html, body,#app, .main-layout, .main-layout > .content {
@@ -185,6 +225,11 @@ code {
     table.scoresheet, .bid-cards, .homelist, .HelpPage {
         margin-bottom: 100px;
     }
+
+        .HelpPage .bid-cards, .HelpPage p, .HelpPage > div {
+            margin-bottom: 30px;
+        }
+
     table.scoresheet th, table.scoresheet td {
         padding: 1px;
         
