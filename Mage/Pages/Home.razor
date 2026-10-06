@@ -21,7 +21,7 @@
                 var dealerIndex = game.Rounds.FirstOrDefault()?.DealerIndex; // Get the dealer index from the first round
                 <li @onclick="() => NavigateToGame(game)" class="@GetListClass(game)">
                     <b>@game.StartDate.ToShortDateString()</b>
-                    - Players: @string.Join(", ", game.Players.Select((p, index) => index == dealerIndex ? $"{p.Initials}*" : p.Initials))
+                    - Players: @string.Join(", ", game.Players.Select((p, index) => index == dealerIndex ? $"{p.Name}*" : p.Name))
                     - @(game.IsComplete ? "Complete" : $"(Round {game.Rounds.Count})")
                 </li>
             }

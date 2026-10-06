@@ -20,7 +20,7 @@ else
                 <th>Round</th>
                 @foreach (var p in game.Players)
                 {
-                    <th>@p.Initials</th>
+                    <th>@p.Name</th>
                 }
             </tr>
         </thead>
@@ -31,8 +31,8 @@ else
                     <td data-label="Round">@(r + 1)</td>
                     @foreach (var p in game.Players)
                     {
-                        var bid = game.Rounds[r].Bids.FirstOrDefault(b => b.PlayerInitials == p.Initials);
-                        <td data-label="@bid?.PlayerInitials">
+                        var bid = game.Rounds[r].Bids.FirstOrDefault(b => b.PlayerName == p.Name);
+                        <td data-label="@bid?.PlayerName">
                             @(bid?.Success.HasValue == true ? (bid?.Success == true ? $"😊" : $"☹️") : $"")
                             @bid?.BidValue | @bid?.TricksTaken | @bid?.RoundPoints
                         </td>

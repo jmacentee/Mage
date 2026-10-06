@@ -1,34 +1,25 @@
 ﻿@page "/newgame"
 @inject GameService GameService
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <h3>New Game</h3>
-<p>Enter the names and initials for 3 to 6 players. Select which player will be the dealer for the first round. Initials must be unique.  Feel free to make them up.</p>
+<p>Enter the names of 3 to 6 players in play order. Drag the ⋮⋮ handle on the left of a row to change the player order. Select which player will be the dealer for the first round. Feel free to make them up.</p>
 @for (int i = 0; i < 6; i++)
 {
     var index = i;
-    <div>
+    <div class="player-row">
+        <span class="drag-handle" @onpointerdown="e => OnDragStart(index, e)" title="Drag to change player order">⋮⋮</span>
         <input type="radio"
-        name="dealer"
-        value="@index"
-        checked="@((selectedDealer == index) ? true : false)"
-        @onchange="EventCallback.Factory.Create<ChangeEventArgs>(this, e => selectedDealer = int.Parse(e.Value.ToString()))" />
+               name="dealer"
+               value="@index"
+               checked="@((selectedDealer == index) ? true : false)"
+               @onchange="EventCallback.Factory.Create<ChangeEventArgs>(this, e => selectedDealer = int.Parse(e.Value.ToString()))" />
         <input placeholder="Name" @bind="players[index].Name" style="width:8em" />
-        <input placeholder="Initials" maxlength="3" @bind="players[index].Initials" style="width:6em" />
+        <button class="clear-btn" @onclick="() => ClearPlayer(index)" title="Clear this row">✕</button>
     </div>
 }
 
-@* @foreach (Player player in players)
-{
-    <p><span>@player.Name</span><span>@player.Initials</span></p>
-}
-
-<p>@selectedDealer</p>
-
-@if (selectedDealer > -1){
-     <p>@players[selectedDealer].Name</p>
-}
- *@
 <footer class="sticky">
     <button @onclick="Reset">⟲</button>
     <button @onclick=@(() => Nav.NavigateTo("./"))>🏠</button>
@@ -39,10 +30,21 @@
 @code {
     private List<Player> players = Enumerable.Range(0, 6).Select(_ => new Player()).ToList();
     private int selectedDealer = -1;
+    private int? draggedIndex;
 
-    private void Reset(){
+    private void Reset()
+    {
         players = Enumerable.Range(0, 6).Select(_ => new Player()).ToList();
         selectedDealer = -1;
+    }
+
+    private void ClearPlayer(int index)
+    {
+        players[index] = new Player();
+        if (selectedDealer == index)
+        {
+            selectedDealer = -1;
+        }
     }
 
     private void InitializeNewGame()
@@ -52,13 +54,14 @@
         if (lastGame != null)
         {
             // Restore player details
-            players = lastGame.Players.Select(p => new Player { Name = p.Name, Initials = p.Initials }).ToList();
+            players = lastGame.Players.Select(p => new Player { Name = p.Name }).ToList();
 
             // Determine next dealer
             var previousDealer = lastGame.Rounds.FirstOrDefault()?.DealerIndex ?? -1;
-            if (previousDealer >= 0)
+            var namedPlayers = players.Count(p => !string.IsNullOrWhiteSpace(p.Name));
+            if (previousDealer >= 0 && namedPlayers > 0)
             {
-                selectedDealer = (previousDealer + 1) % players.Count(p => !string.IsNullOrWhiteSpace(p.Name));
+                selectedDealer = (previousDealer + 1) % namedPlayers;
             }
 
             // Ensure the list always has 6 players
@@ -66,10 +69,7 @@
             {
                 players.Add(new Player());
             }
-
-
         }
-
     }
 
     protected override void OnInitialized()
@@ -77,21 +77,36 @@
         InitializeNewGame();
     }
 
+    private async Task OnDragStart(int index, PointerEventArgs e)
+    {
+        draggedIndex = index;
+        await JS.InvokeVoidAsync("startPlayerRowDrag", index, this, "OnDragEnded");
+    }
+
+    // Called by drag.js when the drag gesture ends, with the target row
+    // index (-1 when the drag ended over no row or over the original row).
+    public void OnDragEnded(int targetIndex)
+    {
+        if (draggedIndex != null && targetIndex >= 0)
+        {
+            var dragged = players[draggedIndex.Value];
+            players.RemoveAt(draggedIndex.Value);
+            players.Insert(targetIndex, dragged);
+        }
+        draggedIndex = null;
+    }
 
     bool CanStart =>
-     players.Count(p => !string.IsNullOrWhiteSpace(p.Name) && !string.IsNullOrWhiteSpace(p.Initials)) >= 3 &&
-     selectedDealer >= 0 &&
-     !string.IsNullOrWhiteSpace(players[selectedDealer].Name) &&
-     players.Where(p => !string.IsNullOrWhiteSpace(p.Initials)).Select(p => p.Initials).Distinct().Count() == players.Count(p => !string.IsNullOrWhiteSpace(p.Initials));
-
-
+        players.Count(p => !string.IsNullOrWhiteSpace(p.Name)) >= 3 &&
+        selectedDealer >= 0 &&
+        !string.IsNullOrWhiteSpace(players[selectedDealer].Name);
 
     void StartGame()
     {
         if (!CanStart) return;
 
         var validPlayers = players
-            .Where(p => !string.IsNullOrWhiteSpace(p.Name) && !string.IsNullOrWhiteSpace(p.Initials))
+            .Where(p => !string.IsNullOrWhiteSpace(p.Name))
             .ToList();
 
         var game = new Game { Players = validPlayers };

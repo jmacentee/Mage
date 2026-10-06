@@ -136,9 +136,33 @@ code {
     border-bottom: solid 1px #E8E8E8;
 }
 
-    .bid-card .initials {
+    .bid-card .player-name {
         font-size: 1.6em;
     }
+
+.player-row {
+    display: flex;
+    align-items: center;
+}
+
+.drag-handle {
+    font-size: 1.4em;
+    padding: 0.6em;
+    margin: 0 0.5em;
+    letter-spacing: -0.2em;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+.clear-btn {
+    margin: 0.3em;
+    padding: 0.6em 0.8em;
+}
+
+.player-row.drag-target {
+    background-color: lightyellow;
+}
 
     .bid-card input::placeholder {
         font-size: 0.7em;

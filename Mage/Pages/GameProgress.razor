@@ -22,18 +22,18 @@
         {
 
             <div class="@GetRoundTitleClass(PlayerIndex)">
-                <b><span class="initials">@player.Name</span> (@player.Score pts) @GetRoundTitle(PlayerIndex)</b><br />
-                <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Initials).BidValue" placeholder="Bid" 
+                <b><span class="player-name">@player.Name</span> (@player.Score pts) @GetRoundTitle(PlayerIndex)</b><br />
+                                <input type="number" min="0" max="@roundNumber" @bind="GetBid(player.Name).BidValue" placeholder="Bid" 
                 @bind:event="oninput"
-                @onchange="() => OnBidValueChanged(player.Initials)"
+                                @onchange="() => OnBidValueChanged(player.Name)"
                 onfocus="this.select();" />
 
-                <button class="@GetButtonClass(player.Initials, true)" @onclick="() => SetSuccess(player.Initials)">😊</button>
-                <button class="@GetButtonClass(player.Initials, false)" @onclick="() => SetFail(player.Initials)">☹️</button>
+                                <button class="@GetButtonClass(player.Name, true)" @onclick="() => SetSuccess(player.Name)">😊</button>
+                                <button class="@GetButtonClass(player.Name, false)" @onclick="() => SetFail(player.Name)">☹️</button>
 
-                @if (failSelected.GetValueOrDefault(player.Initials))
+                                @if (failSelected.GetValueOrDefault(player.Name))
                 {
-                    <input type="number" min="0" max="@roundNumber" placeholder="Took" @bind="GetBid(player.Initials).TricksTaken" @bind:event="oninput" onfocus="this.select();" />
+                                    <input type="number" min="0" max="@roundNumber" placeholder="Took" @bind="GetBid(player.Name).TricksTaken" @bind:event="oninput" onfocus="this.select();" />
                 }
             </div>
             PlayerIndex++;
@@ -84,7 +84,7 @@
 
     private int? TotalTricksTaken => game?.Players.Sum(player =>
     {
-        var bid = GetBid(player.Initials);
+            var bid = GetBid(player.Name);
         if (bid == null) return 0;
         if (bid.Success == null) return 0;
         if (!bid.TricksTaken.HasValue == null) return 0;
@@ -94,7 +94,7 @@
 
     private int? TotalTricksBid => game?.Players.Sum(player =>
     {
-        var bid = GetBid(player.Initials);
+            var bid = GetBid(player.Name);
         if (bid == null) return 0;
         return bid.BidValue;
     });
@@ -144,48 +144,48 @@
 
     }
 
-    Bid GetBid(string initials)
+    Bid GetBid(string name)
     {
         if (currentRound == null) return new Bid();
-        var bid = currentRound.Bids.FirstOrDefault(b => b.PlayerInitials == initials);
+            var bid = currentRound.Bids.FirstOrDefault(b => b.PlayerName == name);
         if (bid == null)
         {
-            bid = new Bid { PlayerInitials = initials };
+                bid = new Bid { PlayerName = name };
             currentRound.Bids.Add(bid);
         }
         return bid;
     }
 
-    void SetSuccess(string initials)
+        void SetSuccess(string name)
     {
-        successSelected[initials] = true;
-        failSelected[initials] = false;
-        Bid bid = GetBid(initials);
+            successSelected[name] = true;
+            failSelected[name] = false;
+            Bid bid = GetBid(name);
         bid.Success = true;
         bid.TricksTaken = bid.BidValue;
     }
 
-    void SetFail(string initials)
+        void SetFail(string name)
     {
-        failSelected[initials] = true;
-        successSelected[initials] = false;
-        Bid bid = GetBid(initials);
+            failSelected[name] = true;
+            successSelected[name] = false;
+            Bid bid = GetBid(name);
         bid.Success = false;
         bid.TricksTaken = null;
     }
 
-    private void OnBidValueChanged(string initials)
+        private void OnBidValueChanged(string name)
     {
-        var bid = GetBid(initials);
-        failSelected[initials] = false;
-        successSelected[initials] = false;
+            var bid = GetBid(name);
+            failSelected[name] = false;
+            successSelected[name] = false;
         bid.Success = null;
         bid.TricksTaken = null;
     }
 
-    string GetButtonClass(string initials, bool isSuccess)
+        string GetButtonClass(string name, bool isSuccess)
     {
-        bool selected = isSuccess ? successSelected.GetValueOrDefault(initials) : failSelected.GetValueOrDefault(initials);
+            bool selected = isSuccess ? successSelected.GetValueOrDefault(name) : failSelected.GetValueOrDefault(name);
         if (isSuccess){
             return selected ? "selectedSuccess" : "ToggleSuccess";
         }else{
@@ -232,7 +232,7 @@
     {
         foreach (var bid in currentRound!.Bids)
         {
-            var player = game!.Players.First(p => p.Initials == bid.PlayerInitials);
+            var player = game!.Players.First(p => p.Name == bid.PlayerName);
 
             if (bid.Success == true)
                 player.Score += bid.BidValue + 2;
@@ -255,7 +255,7 @@
     }
 
     bool AllPlayersSubmitted =>
-        game?.Players.All(p => successSelected.ContainsKey(p.Initials) || failSelected.ContainsKey(p.Initials)) ?? false;
+        game?.Players.All(p => successSelected.ContainsKey(p.Name) || failSelected.ContainsKey(p.Name)) ?? false;
 
     bool IsFinalRound =>
         game != null && game.Rounds.Count >= MaxRounds(game.Players.Count);
@@ -269,23 +269,23 @@
 
         // Ensure all bid values are within allowed range
         if (!game.Players.All(p =>
-            GetBid(p.Initials).BidValue >= 0 &&
-            GetBid(p.Initials).BidValue <= roundNumber))
+                    GetBid(p.Name).BidValue >= 0 &&
+                    GetBid(p.Name).BidValue <= roundNumber))
             return false;
 
         // Ensure PointsLost values are valid for players who failed
         // if (!game.Players.All(p =>
-        //     GetBid(p.Initials).Success != false || // If Success is not false, ignore check
-        //     (GetBid(p.Initials).PointsLost >= 1 && GetBid(p.Initials).PointsLost <= roundNumber)))
+                //     GetBid(p.Name).Success != false || // If Success is not false, ignore check
+                //     (GetBid(p.Name).PointsLost >= 1 && GetBid(p.Name).PointsLost <= roundNumber)))
         //     return false;
 
         // Ensure all TricksTaken are within allowed range
         if (!game.Players.All(p =>
-            GetBid(p.Initials).TricksTaken >= 0 &&
-            GetBid(p.Initials).TricksTaken <= roundNumber))
+                    GetBid(p.Name).TricksTaken >= 0 &&
+                    GetBid(p.Name).TricksTaken <= roundNumber))
             return false;
 
-        if (game.Players.Any(p => GetBid(p.Initials).Success==false && GetBid(p.Initials).TricksTaken == GetBid(p.Initials).BidValue))
+                if (game.Players.Any(p => GetBid(p.Name).Success==false && GetBid(p.Name).TricksTaken == GetBid(p.Name).BidValue))
             return false;
 
         if (TotalTricksTaken != roundNumber) return false;

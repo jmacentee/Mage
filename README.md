@@ -22,13 +22,13 @@ If there are browser restrictions to how much local storage an application is al
 
 This is a simple grid of games played. The most recent games at the top.
 
-For each game, the grid will show the start date, the number of players, the player initials (comma separated list), a completed/in progress indicator icon, and the next round number (for in progress games only). The grid rows of the incomplete games should be tall and easy to press with a finger, the completed rows can be smaller to save on screen space. Pressing an incomplete game row navigates to the "**game in progress screen"** for the current round of that game. Pressing a complete game row navigates to the "**scoresheet** **view**" of that game.
+For each game, the grid will show the start date, the number of players, the player names (comma separated list), a completed/in progress indicator icon, and the next round number (for in progress games only). The grid rows of the incomplete games should be tall and easy to press with a finger, the completed rows can be smaller to save on screen space. Pressing an incomplete game row navigates to the "**game in progress screen"** for the current round of that game. Pressing a complete game row navigates to the "**scoresheet** **view**" of that game.
 
 On this screen will be a button to "clear history" which will empty all local storage and reset the screen. Also, there will be a "new game" button which will open "**the new game screen**".
 
 **2\. the new game screen:**
 
-On this screen, users will see a prompt "please enter your player names and initials in player order and select the first dealer" followed by a grid of 6 rows. Label the rows:
+On this screen, users will see a prompt "please enter your player names in player order and select the first dealer" followed by a grid of 6 rows. Label the rows:
 
 - Player 1
 - Player 2
@@ -37,7 +37,7 @@ On this screen, users will see a prompt "please enter your player names and init
 - (Optional) Player 5
 - (Optional) Player 6
 
-Each row will have a radio button (to select the first dealer), a textbox for name, and a textbox for initials (1 character minimum, 3 characters maximum). A minimum of 3 rows must be filled out (name and initials) before the user is allowed to continue. One of the filled out rows must be selected as first dealer.
+Each row will have a drag handle on the left (⋮⋮) that can be dragged to change the player order, a radio button (to select the first dealer), a textbox for name, and a clear button (✕) to the right of the name field which clears the row (setting it back to no player, and deselecting it as the dealer if it was selected). A minimum of 3 rows must be filled out (name) before the user is allowed to continue. One of the filled out rows must be selected as first dealer.
 
 Show a "Cancel" button which returns to the Home Screen.
 
@@ -46,6 +46,8 @@ Show a "Start Game" button that navigates to the "game in progress screen" when 
 The first time a user comes to this screen, all information is blank. Each successive time the user navigates to "the new game screen", the information is filled out with the details from their previous game, with the exception that the first dealer radio button has advanced to the next player automatically. For example, if there are only 3 player names filled out, and the previous game Player 3 was the first dealer, then Player 1 will be selected as first dealer. If there are 4 player names filled out, and the previous game Player 3 was the first dealer, then Player 4 will be selected as first dealer.
 
 **Player Order:**
+
+The player order can be changed on the new game screen by dragging the ⋮⋮ handle on the left side of a row to a new position. The handle works with both mouse and touch input. The dealer radio button is tied to the row position, so the selected dealer follows the row when the order is changed.
 
 The players are entered in turn order or "from right to left". Player 2 is "to the left" of Player 1. Player 3 is "to the left" of Player 2. Player 1 is "to the left" of the last player entered.
 
@@ -80,7 +82,7 @@ Bid Card:
 
 Bid cards are only shown for the players will their names filled out.
 
-The bid card shows the player"s initials, a textbox to enter their bid, and their current score, a button "success button" which is an icon of a happy face, a "fail" button that shows a sad face. The bid will be validated to be a number between zero and the current round number and will use the phone"s number keypad to enter it. The bid field will turn red if a user enters an invalid bid (outside the allowed range). Users can delete the contents of a bid field and change them to a different valid value until the "success" or "fail" buttons are clicked.
+The bid card shows the player"s name, a textbox to enter their bid, and their current score, a button "success button" which is an icon of a happy face, a "fail" button that shows a sad face. The bid will be validated to be a number between zero and the current round number and will use the phone"s number keypad to enter it. The bid field will turn red if a user enters an invalid bid (outside the allowed range). Users can delete the contents of a bid field and change them to a different valid value until the "success" or "fail" buttons are clicked.
 
 Current score for each player is 0 for Round 1.
 
