@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "matcher": "edit|create",
+        "bash": "fuse hook copilot post-edit",
+        "powershell": "fuse hook copilot post-edit",
+        "timeoutSec": 60
+      }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "bash": "fuse hook copilot stop",
+        "powershell": "fuse hook copilot stop",
+        "timeoutSec": 300
+      }
+    ]
+  }
+}
