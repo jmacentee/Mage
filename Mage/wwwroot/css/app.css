@@ -112,7 +112,7 @@ button {
 
     button:hover:not(:disabled) {
         background: var(--surface-3);
-        border-color: var(--accent-2);
+        /*border-color: var(--accent-2);*/
         transform: translateY(-1px);
         box-shadow: var(--shadow-soft);
     }
