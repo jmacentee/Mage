@@ -8,7 +8,7 @@ If you fork this, pay attention to the hosting setup instructions at the top of
 
 Specification
 -
-.NET 9 Blazor WebAssembly (WASM) only project. It will be hosted as a static website. All data will be kept in local storage on the client only. The UI will be formatted for easy use on a phone, but should be responsive and useable on a tablet or PC. The name of the project will be Mage because it is a scorekeeping app for the card game Wizard.
+.NET 10 Blazor WebAssembly (WASM) only project. It will be hosted as a static website. All data will be kept in local storage on the client only. The UI will be formatted for easy use on a phone, but should be responsive and useable on a tablet or PC. The name of the project will be Mage because it is a scorekeeping app for the card game Wizard.
 
 Mage will keep the history of all games played, but older games can be cleared out to save on local storage. Games can be interrupted and resumed over multiple days, and multiple active games can be in progress at the same time. Only one game can be open and contributed to at once.
 
