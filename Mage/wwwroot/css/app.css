@@ -143,6 +143,9 @@ code {
 .player-row {
     display: flex;
     align-items: center;
+    padding: 0.15em 0.2em;
+    border-radius: 4px;
+    transition: background-color 0.1s ease;
 }
 
 .drag-handle {
@@ -155,13 +158,39 @@ code {
     user-select: none;
 }
 
+.player-row.no-name .drag-handle {
+    cursor: default;
+    opacity: 0.3;
+}
+
+.player-row.dragging {
+    background-color: #eaf1ff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    position: relative;
+    z-index: 1;
+}
+
+.drop-gap {
+    height: 0;
+    margin: 2px 0;
+    border-top: 3px dashed #3b82f6;
+    position: relative;
+}
+
+.drop-gap::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: -6px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #3b82f6;
+}
+
 .clear-btn {
     margin: 0.3em;
     padding: 0.6em 0.8em;
-}
-
-.player-row.drag-target {
-    background-color: lightyellow;
 }
 
     .bid-card input::placeholder {

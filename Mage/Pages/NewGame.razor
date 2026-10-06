@@ -8,7 +8,7 @@
 @for (int i = 0; i < 6; i++)
 {
     var index = i;
-    <div class="player-row">
+    <div class="player-row @(string.IsNullOrWhiteSpace(players[index].Name) ? "no-name" : "")">
         <span class="drag-handle" @onpointerdown="e => OnDragStart(index, e)" title="Drag to change player order">⋮⋮</span>
         <input type="radio"
                name="dealer"
@@ -81,6 +81,9 @@
 
         private async Task OnDragStart(int index, PointerEventArgs e)
         {
+            // Only rows that actually have a name can be reordered.
+            if (string.IsNullOrWhiteSpace(players[index].Name)) return;
+
             draggedIndex = index;
             dragReference = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("startPlayerRowDrag", index, dragReference, "OnDragEnded");
@@ -89,13 +92,20 @@
         // Called by drag.js when the drag gesture ends, with the target row
         // index (-1 when the drag ended over no row or over the original row).
         [JSInvokable]
-        public void OnDragEnded(int targetIndex)
+        public void OnDragEnded(int insertIndex)
         {
-            if (draggedIndex != null && targetIndex >= 0)
+            if (draggedIndex != null)
             {
-                var dragged = players[draggedIndex.Value];
-                players.RemoveAt(draggedIndex.Value);
-                players.Insert(targetIndex, dragged);
+                int from = draggedIndex.Value;
+                var item = players[from];
+                players.RemoveAt(from);
+                // insertIndex was computed in the full list; account for the
+                // removal shifting the following rows up by one.
+                int to = insertIndex > from ? insertIndex - 1 : insertIndex;
+                to = Math.Clamp(to, 0, players.Count);
+                players.Insert(to, item);
+                // Commit the reorder so the UI reflects the new order at once.
+                StateHasChanged();
             }
             draggedIndex = null;
             dragReference?.Dispose();
