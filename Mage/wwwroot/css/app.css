@@ -5,10 +5,10 @@
    ============================================================ */
 
 :root {
-    --bg-1: #160f2e;
-    --bg-2: #241a4a;
-    --bg-3: #0c0920;
-    --surface: rgba(255, 255, 255, 0.06);
+    --bg-1: #27AAE1;
+    --bg-2: #115D7C;
+    --bg-3: #E41E26;
+    --surface: rgba(50, 36, 112, 0.16);
     --surface-2: rgba(255, 255, 255, 0.10);
     --surface-3: rgba(255, 255, 255, 0.14);
     --border: rgba(255, 255, 255, 0.10);
@@ -17,8 +17,8 @@
     --text-dim: #b7b0d6;
     --text-faint: #8a83ad;
     --accent: #f6b73c;
-    --accent-2: #8b5cf6;
-    --accent-3: #ec4899;
+    --accent-2: #e11d48;
+    --accent-3: #3b82f6;
     --success: #34d399;
     --danger: #fb7185;
     --info: #60a5fa;
@@ -35,15 +35,17 @@ html, body {
     min-height: 100%;
 }
 
+
+
 body {
     font-family: var(--font);
     color: var(--text);
     margin: 1.5rem;
     background:
-        radial-gradient(1200px 600px at 15% -10%, rgba(139, 92, 246, 0.35), transparent 60%),
-        radial-gradient(1000px 600px at 100% 0%, rgba(236, 72, 153, 0.25), transparent 55%),
-        radial-gradient(900px 700px at 50% 120%, rgba(246, 183, 60, 0.18), transparent 60%),
-        linear-gradient(160deg, var(--bg-2), var(--bg-1) 45%, var(--bg-3));
+        radial-gradient(1200px 600px at 15% -10%, rgba(59, 130, 246, 0.35), transparent 60%),
+        radial-gradient(1000px 600px at 100% 0%, rgba(225, 29, 72, 0.20), transparent 55%),
+        radial-gradient(900px 700px at 50% 120%, rgba(246, 183, 60, 0.15), transparent 60%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2) 60%, var(--bg-3));
     background-attachment: fixed;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -56,10 +58,10 @@ h1, h2, h3, h4 {
 }
 
 h2, h3 {
-    text-shadow: 0 2px 18px rgba(139, 92, 246, 0.35);
+    text-shadow: 0 2px 18px rgba(59, 130, 246, 0.30);
 }
 
-a {
+a, a:link {
     color: var(--accent);
     text-decoration: none;
 }
@@ -69,9 +71,10 @@ a {
     }
 
 sub {
-    color: var(--text-dim);
+    color: var(--text);
     font-weight: 400;
-    font-size: 0.6em;
+    font-size: 0.55em;
+    opacity: 0.85;
 }
 
 /* ---------- Layout shell ---------- */
@@ -156,8 +159,8 @@ input {
 
     input:focus {
         outline: none;
-        border-color: var(--accent-2);
-        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.35);
+        border-color: var(--accent-3);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.40);
     }
 
 input[type="radio"] {
@@ -260,20 +263,38 @@ code {
 
 /* ---------- Sticky header / footer bars ---------- */
 .sticky {
-    background: var(--surface);
+    position: relative;
+    overflow: visible;
+    
+    
+    
+    
     border: 1px solid var(--border);
+    
+    
     border-radius: var(--radius);
-    padding: 0.75rem 1rem;
-    box-shadow: var(--shadow-soft);
+    /*box-shadow: var(--shadow-soft);*/
     backdrop-filter: blur(10px);
+
+    padding: 1.1rem 1.25rem;
     margin: 0.75rem 0;
 }
 
 header.sticky {
-    border-left: 4px solid var(--accent-2);
+    background-color:rgba(13, 52, 114, 0.39);
+    /* border-left: 4px solid var(--accent-3); */
+    padding-top:0.5em;;
+    padding-right: 6.5rem;
+}
+
+header.sticky h2, header.sticky h3 {
+    line-height: 1.25;
+    margin: 0;
+    padding:0;
 }
 
 footer.sticky {
+    background-color:rgba(13, 52, 114, 0.39);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -282,6 +303,7 @@ footer.sticky {
 }
 
     footer.sticky button {
+        background-color:rgba(225, 29, 72, 0.20);
         margin: 0.15em;
     }
 
@@ -305,8 +327,8 @@ footer.sticky {
 }
 
 .GameNotComplete {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.15));
-    border-left: 4px solid var(--accent-2);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(225, 29, 72, 0.15));
+    border-left: 4px solid var(--accent-3);
 }
 
 .GameIsComplete {
@@ -343,6 +365,13 @@ footer.sticky {
         border-color: var(--border);
     }
 
+.player-row input:not([type="radio"]) {
+    flex: 1;
+    min-width: 0;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid var(--border-strong);
+}
+
 .drag-handle {
     font-size: 1.4em;
     padding: 0.5em;
@@ -367,9 +396,9 @@ footer.sticky {
 }
 
 .player-row.dragging {
-    background: rgba(139, 92, 246, 0.25);
-    border-color: var(--accent-2);
-    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+    background: rgba(59, 130, 246, 0.25);
+    border-color: var(--accent-3);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
     position: relative;
     z-index: 1;
 }
@@ -377,7 +406,7 @@ footer.sticky {
 .drop-gap {
     height: 0;
     margin: 2px 0;
-    border-top: 3px dashed var(--accent-2);
+    border-top: 3px dashed var(--bg-3);
     position: relative;
 }
 
@@ -389,7 +418,7 @@ footer.sticky {
         width: 9px;
         height: 9px;
         border-radius: 50%;
-        background: var(--accent-2);
+        background: var(--accent-3);
     }
 
 .clear-btn {
@@ -503,6 +532,8 @@ footer.sticky {
 .RoundType {
     position: absolute;
     right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 1.3em;
 }
 
@@ -572,7 +603,7 @@ table.scoresheet {
     }
 
     table.scoresheet tbody tr:hover {
-        background: rgba(139, 92, 246, 0.12);
+        background: rgba(59, 130, 246, 0.12);
     }
 
     table.scoresheet td:first-child {
@@ -608,6 +639,7 @@ table.scoresheet {
         min-height: 100vh;
         border-left: 0;
         border-right: 0;
+        padding:0;
     }
 
     table.scoresheet, .bid-cards, .homelist, .HelpPage {
@@ -629,6 +661,7 @@ table.scoresheet {
         border-radius: 0;
         border-left: 0;
         border-right: 0;
+        margin-bottom: 0;
     }
 
     #app footer.sticky button {
