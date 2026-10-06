@@ -20,6 +20,11 @@
     </div>
 }
 
+@if (!NamesUnique)
+{
+    <p class="name-warning">Player names must be unique.</p>
+}
+
 <footer class="sticky">
     <button @onclick="Reset">⟲</button>
     <button @onclick=@(() => Nav.NavigateTo("./"))>🏠</button>
@@ -112,25 +117,40 @@
             dragReference = null;
         }
 
+    // The game only ever contains players that actually have a name; empty
+    // slots are skipped and the named players are compacted to the top.
+    private List<Player> NamedPlayers =>
+        players.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
+
+    // All non-blank player names must be distinct (trimmed, case-insensitive).
+    bool NamesUnique =>
+        players
+            .Where(p => !string.IsNullOrWhiteSpace(p.Name))
+            .GroupBy(p => p.Name!.Trim(), StringComparer.OrdinalIgnoreCase)
+            .All(g => g.Count() == 1);
+
     bool CanStart =>
-        players.Count(p => !string.IsNullOrWhiteSpace(p.Name)) >= 3 &&
+        NamedPlayers.Count >= 3 &&
         selectedDealer >= 0 &&
-        !string.IsNullOrWhiteSpace(players[selectedDealer].Name);
+        !string.IsNullOrWhiteSpace(players[selectedDealer].Name) &&
+        NamesUnique;
 
     void StartGame()
     {
         if (!CanStart) return;
 
-        var validPlayers = players
-            .Where(p => !string.IsNullOrWhiteSpace(p.Name))
-            .ToList();
+        var validPlayers = NamedPlayers;
+
+        // selectedDealer is a slot index into the full 6-slot editor; remap it
+        // to its position in the compacted named-players list the game will use.
+        int dealerIndex = validPlayers.IndexOf(players[selectedDealer]);
 
         var game = new Game { Players = validPlayers };
         game.Rounds.Add(new Round
         {
             RoundNumber = 1,
-            DealerIndex = selectedDealer,
-            FirstPlayerIndex = (selectedDealer + 1) % validPlayers.Count
+            DealerIndex = dealerIndex,
+            FirstPlayerIndex = (dealerIndex + 1) % validPlayers.Count
         });
 
         GameService.StartNewGame(game);

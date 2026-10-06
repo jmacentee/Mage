@@ -193,6 +193,12 @@ code {
     padding: 0.6em 0.8em;
 }
 
+.name-warning {
+    color: #b00020;
+    font-weight: bold;
+    margin: 0.4em 0.2em;
+}
+
     .bid-card input::placeholder {
         font-size: 0.7em;
     }
