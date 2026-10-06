@@ -88,6 +88,7 @@
 
         // Called by drag.js when the drag gesture ends, with the target row
         // index (-1 when the drag ended over no row or over the original row).
+        [JSInvokable]
         public void OnDragEnded(int targetIndex)
         {
             if (draggedIndex != null && targetIndex >= 0)
