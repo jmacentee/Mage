@@ -2,6 +2,8 @@
 @inject GameService GameService
 @inject NavigationManager Nav
 @inject LocalStorageService Storage
+@inject IJSRuntime JS
+@using Microsoft.JSInterop
 
 
 @if (game is not null)
@@ -44,6 +46,7 @@
     <footer class="sticky">
         <button @onclick="Undo">⟲</button>
         <button @onclick="ViewScoresheet">🧮</button>
+        <button @onclick="ToggleAudio" title="Toggle audio">@(_audioEnabled ? "🔊" : "🔇")</button>
         <button @onclick="ToHome">🏠</button>
         @if (!IsFinalRound)
 
@@ -79,6 +82,8 @@
     Dictionary<string, bool> successSelected = new();
     Dictionary<string, bool> failSelected = new();
 
+    private bool _audioEnabled = true;
+
     private string ShowTricks(){
         if (TotalTricksTaken > 0) return "";
         return "hidden";
@@ -112,12 +117,15 @@
 
     private int? TricksDifference => Math.Abs(roundNumber - TotalTricksBid.GetValueOrDefault());
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         game = GameService.CurrentGame;
 
         StartRound();
 
+        bool? savedAudio = await Storage.LoadAsync<bool>("audioEnabled");
+        if (savedAudio.HasValue)
+            _audioEnabled = savedAudio.Value;
     }
 
     protected string GetRoundTitle(int PlayerIndex)
@@ -165,6 +173,7 @@
             Bid bid = GetBid(name);
         bid.Success = true;
         bid.TricksTaken = bid.BidValue;
+        PlaySound("happy.mp3");
     }
 
         void SetFail(string name)
@@ -174,6 +183,19 @@
             Bid bid = GetBid(name);
         bid.Success = false;
         bid.TricksTaken = null;
+        PlaySound("sad.mp3");
+    }
+
+    private void PlaySound(string file)
+    {
+        if (!_audioEnabled) return;
+        _ = JS.InvokeVoidAsync("playSound", file);
+    }
+
+    private void ToggleAudio()
+    {
+        _audioEnabled = !_audioEnabled;
+        _ = Storage.SaveAsync("audioEnabled", _audioEnabled);
     }
 
         private void OnBidValueChanged(string name)
