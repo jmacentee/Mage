@@ -77,24 +77,29 @@
         InitializeNewGame();
     }
 
-    private async Task OnDragStart(int index, PointerEventArgs e)
-    {
-        draggedIndex = index;
-        await JS.InvokeVoidAsync("startPlayerRowDrag", index, this, "OnDragEnded");
-    }
+    private DotNetObjectReference<NewGame>? dragReference;
 
-    // Called by drag.js when the drag gesture ends, with the target row
-    // index (-1 when the drag ended over no row or over the original row).
-    public void OnDragEnded(int targetIndex)
-    {
-        if (draggedIndex != null && targetIndex >= 0)
+        private async Task OnDragStart(int index, PointerEventArgs e)
         {
-            var dragged = players[draggedIndex.Value];
-            players.RemoveAt(draggedIndex.Value);
-            players.Insert(targetIndex, dragged);
+            draggedIndex = index;
+            dragReference = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("startPlayerRowDrag", index, dragReference, "OnDragEnded");
         }
-        draggedIndex = null;
-    }
+
+        // Called by drag.js when the drag gesture ends, with the target row
+        // index (-1 when the drag ended over no row or over the original row).
+        public void OnDragEnded(int targetIndex)
+        {
+            if (draggedIndex != null && targetIndex >= 0)
+            {
+                var dragged = players[draggedIndex.Value];
+                players.RemoveAt(draggedIndex.Value);
+                players.Insert(targetIndex, dragged);
+            }
+            draggedIndex = null;
+            dragReference?.Dispose();
+            dragReference = null;
+        }
 
     bool CanStart =>
         players.Count(p => !string.IsNullOrWhiteSpace(p.Name)) >= 3 &&

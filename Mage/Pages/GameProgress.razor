@@ -232,17 +232,20 @@
     {
         foreach (var bid in currentRound!.Bids)
         {
-            var player = game!.Players.First(p => p.Name == bid.PlayerName);
+                // Skip bids that do not match a player (e.g. stale bids from an
+                // older saved game) instead of crashing the round.
+                var player = game!.Players.FirstOrDefault(p => p.Name == bid.PlayerName);
+                if (player == null) continue;
 
-            if (bid.Success == true)
-                player.Score += bid.BidValue + 2;
-            else if (bid.TricksTaken.HasValue)
-                player.Score -= Math.Abs(bid.BidValue - bid.TricksTaken.Value);
+                if (bid.Success == true)
+                    player.Score += bid.BidValue + 2;
+                else if (bid.TricksTaken.HasValue)
+                    player.Score -= Math.Abs(bid.BidValue - bid.TricksTaken.Value);
 
 
-            bid.RoundPoints = player.Score;
+                bid.RoundPoints = player.Score;
+            }
         }
-    }
 
     void ToHome(){
         GameService.SaveGame();
